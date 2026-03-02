@@ -194,23 +194,6 @@
       color: var(--text);
     }
 
-    /* Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 768px) {
-      .grid-2 { grid-template-columns: 1fr; }
-    }
-
     /* Form */
     .form-row {
       display: flex;
@@ -227,11 +210,6 @@
     .form-group.sm {
       flex: 0 0 180px;
       min-width: 180px;
-    }
-
-    .form-group.xs {
-      flex: 0 0 140px;
-      min-width: 140px;
     }
 
     label {
@@ -258,10 +236,6 @@
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(110,231,255,0.1);
-    }
-
-    input::placeholder {
-      color: color-mix(in srgb, var(--muted) 70%, transparent);
     }
 
     /* Checkbox row */
@@ -312,33 +286,16 @@
       font-family: var(--sans);
     }
 
-    button:hover, .btn:hover {
-      background: rgba(110,231,255,.18);
-      transform: translateY(-1px);
-    }
-
-    button:active, .btn:active {
-      transform: translateY(0);
-    }
-
     .btn-primary {
       background: var(--accent);
       color: #000;
       border-color: var(--accent);
     }
 
-    .btn-primary:hover {
-      background: color-mix(in srgb, var(--accent) 85%, #000);
-    }
-
     .btn-danger {
       background: rgba(255,107,107,.15);
       border-color: rgba(255,107,107,.3);
       color: var(--danger);
-    }
-
-    .btn-danger:hover {
-      background: rgba(255,107,107,.25);
     }
 
     .btn-ghost {
@@ -384,50 +341,7 @@
       color: var(--muted);
     }
 
-    /* Stats Bars */
-    .stat-bar {
-      padding: 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: color-mix(in srgb, var(--card) 90%, transparent);
-      margin-bottom: 10px;
-    }
-
-    .stat-bar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .stat-bar-title {
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--text);
-    }
-
-    .stat-bar-value {
-      font-weight: 800;
-      font-size: 16px;
-      font-family: var(--mono);
-      color: var(--accent);
-    }
-
-    .stat-bar-progress {
-      height: 8px;
-      background: rgba(255,255,255,.05);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 999px;
-      transition: width 0.5s;
-    }
-
-    /* List Items */
+    /* List */
     .list {
       max-height: 500px;
       overflow-y: auto;
@@ -505,6 +419,42 @@
       color: var(--accent);
     }
 
+    /* Alert */
+    .alert {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .alert.show { display: block; }
+
+    .alert-error {
+      background: rgba(255,107,107,.12);
+      border: 1px solid rgba(255,107,107,.3);
+      color: color-mix(in srgb, var(--text) 95%, transparent);
+    }
+
+    /* Pills */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 90%, transparent);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .pill strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
     /* Toast */
     .toast-container {
       position: fixed;
@@ -526,161 +476,27 @@
       color: var(--text);
       box-shadow: var(--shadow);
       font-size: 14px;
-      animation: slideIn 0.3s;
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(400px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
     }
 
     .toast.success { border-color: rgba(124,255,178,.3); }
     .toast.error { border-color: rgba(255,107,107,.3); }
     .toast.warning { border-color: rgba(255,209,102,.3); }
 
-    /* Alert */
-    .alert {
-      padding: 14px 16px;
-      border-radius: 10px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .alert.show { display: block; }
-
-    .alert-error {
-      background: rgba(255,107,107,.12);
-      border: 1px solid rgba(255,107,107,.3);
-      color: color-mix(in srgb, var(--text) 95%, transparent);
-    }
-
-    .alert-info {
-      background: rgba(110,231,255,.12);
-      border: 1px solid rgba(110,231,255,.3);
-      color: color-mix(in srgb, var(--text) 95%, transparent);
-    }
-
-    /* Export Preview */
-    .export-preview {
-      background: #0c0e14;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 600px;
-      overflow-y: auto;
-      color: #e0e0e0;
-    }
-
-    html[data-theme="light"] .export-preview {
-      background: #f8f9fa;
-      color: #1a1a1a;
-    }
-
-    /* Pills */
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: color-mix(in srgb, var(--card) 90%, transparent);
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .pill strong {
-      color: var(--text);
-      font-weight: 800;
-    }
-
-    /* Loading */
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: var(--muted);
-    }
-
-    .spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255,255,255,.1);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
     /* Empty state */
     .empty-state {
       text-align: center;
       padding: 60px 20px;
       color: var(--muted);
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255,255,255,.02);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,.12);
-      border-radius: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255,255,255,.18);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .header-actions {
-        justify-content: space-between;
-      }
-
-      .form-group {
-        min-width: 100%;
-      }
+      display:none;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="header-content">
       <h1>📊 Débutant</h1>
       <div class="header-actions">
-        <div class="pill">
-          <span>Date</span>
-          <strong id="currentDate">--</strong>
-        </div>
+        <div class="pill"><span>Date</span><strong id="currentDate">--</strong></div>
         <select id="themeToggle" class="btn-sm">
           <option value="auto">🌓 Auto</option>
           <option value="dark">🌙 Sombre</option>
@@ -690,7 +506,6 @@
     </div>
   </header>
 
-  <!-- Tabs Navigation -->
   <nav class="tabs-nav">
     <div class="tabs-list">
       <button class="tab-btn active" data-tab="contrats">📝 Contrats</button>
@@ -702,9 +517,7 @@
     </div>
   </nav>
 
-  <!-- Main Container -->
   <main class="container">
-    <!-- Tab Contrats -->
     <div id="tab-contrats" class="tab-content active">
       <div class="card">
         <h2 id="formTitle">➕ Ajouter un contrat</h2>
@@ -731,9 +544,10 @@
                 <option value="">-- Choisir --</option>
                 <option value="PLENITUDE">Plenitude</option>
                 <option value="PRIMEO">Primeo</option>
+                <option value="IAG_ONLY">IAG seul</option>
               </select>
             </div>
-            <div class="form-group sm">
+            <div class="form-group sm" id="typeGroup">
               <label for="contractType">Type *</label>
               <select id="contractType" required>
                 <option value="">-- Choisir --</option>
@@ -751,14 +565,8 @@
 
           <div id="optionsGroup" style="display:none;">
             <div class="check-row">
-              <label>
-                <input type="checkbox" id="contractAxa">
-                Assistance AXA (+7€)
-              </label>
-              <label>
-                <input type="checkbox" id="contractDigi">
-                Digitalisation (+2€)
-              </label>
+              <label><input type="checkbox" id="contractAxa"> Assistance AXA (+7€)</label>
+              <label><input type="checkbox" id="contractDigi"> Digitalisation (+2€)</label>
             </div>
           </div>
 
@@ -773,7 +581,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="iagRefGroup">
             <label for="contractIagRef">Référence IAG</label>
             <input type="text" id="contractIagRef" placeholder="Ex: 406XXXXX / A-12345678" maxlength="50">
           </div>
@@ -801,6 +609,7 @@
               <option value="">Tous</option>
               <option value="PLENITUDE">Plenitude</option>
               <option value="PRIMEO">Primeo</option>
+              <option value="IAG_ONLY">IAG seul</option>
             </select>
           </div>
           <div class="form-group sm">
@@ -809,160 +618,52 @@
           </div>
         </div>
         <div id="contractsList" class="list"></div>
-        <div id="contractsEmpty" class="empty-state" style="display:none;">
-          <div class="empty-state-icon">📋</div>
-          <p>Aucun contrat trouvé</p>
-        </div>
+        <div id="contractsEmpty" class="empty-state"><p>Aucun contrat trouvé</p></div>
       </div>
     </div>
 
-    <!-- Tab Jour -->
     <div id="tab-jour" class="tab-content">
       <div class="card">
         <h2>📅 Résumé du jour</h2>
-        <div class="form-row">
-          <div class="form-group sm">
-            <label for="dayDate">Date</label>
-            <input type="date" id="dayDate">
-          </div>
-        </div>
+        <div class="form-row"><div class="form-group sm"><label for="dayDate">Date</label><input type="date" id="dayDate"></div></div>
         <div id="dayKpis" class="kpi-grid"></div>
-        <div id="dayNote" style="margin-top:16px; font-size:13px; color:var(--muted);"></div>
       </div>
-
-      <div class="card">
-        <h2>📝 Contrats du jour</h2>
-        <div id="dayContractsList" class="list"></div>
-        <div id="dayContractsEmpty" class="empty-state" style="display:none;">
-          <div class="empty-state-icon">📝</div>
-          <p>Aucun contrat pour ce jour</p>
-        </div>
-      </div>
+      <div class="card"><h2>📝 Contrats du jour</h2><div id="dayContractsList" class="list"></div><div id="dayContractsEmpty" class="empty-state"><p>Aucun contrat pour ce jour</p></div></div>
     </div>
 
-    <!-- Tab Semaine -->
     <div id="tab-semaine" class="tab-content">
       <div class="card">
         <h2>📊 Résumé de la semaine</h2>
         <div class="form-row">
-          <div class="form-group sm">
-            <label for="weekDate">Sélectionner une date</label>
-            <input type="date" id="weekDate">
-          </div>
-          <div class="form-group">
-            <label>Période</label>
-            <div class="pill" style="width:100%; justify-content:space-between;">
-              <span id="weekRange">--</span>
-              <strong id="weekNumber">--</strong>
-            </div>
-          </div>
+          <div class="form-group sm"><label for="weekDate">Sélectionner une date</label><input type="date" id="weekDate"></div>
+          <div class="form-group"><label>Période</label><div class="pill" style="width:100%; justify-content:space-between;"><span id="weekRange">--</span><strong id="weekNumber">--</strong></div></div>
         </div>
         <div id="weekKpis" class="kpi-grid"></div>
       </div>
-
-      <div class="card">
-        <h2>📊 Répartition par type</h2>
-        <div id="weekStats"></div>
-      </div>
-
-      <div class="card">
-        <h2>📝 Contrats de la semaine</h2>
-        <div id="weekContractsList" class="list"></div>
-        <div id="weekContractsEmpty" class="empty-state" style="display:none;">
-          <div class="empty-state-icon">📝</div>
-          <p>Aucun contrat pour cette semaine</p>
-        </div>
-      </div>
+      <div class="card"><h2>📊 Répartition par type</h2><div id="weekStats"></div></div>
+      <div class="card"><h2>📝 Contrats de la semaine</h2><div id="weekContractsList" class="list"></div><div id="weekContractsEmpty" class="empty-state"><p>Aucun contrat pour cette semaine</p></div></div>
     </div>
 
-    <!-- Tab Mois -->
     <div id="tab-mois" class="tab-content">
       <div class="card">
         <h2>📈 Résumé du mois</h2>
         <div class="form-row">
-          <div class="form-group sm">
-            <label for="monthDate">Sélectionner une date</label>
-            <input type="date" id="monthDate">
-          </div>
-          <div class="form-group">
-            <label>Mois</label>
-            <div class="pill" style="width:100%; justify-content:space-between;">
-              <span id="monthLabel">--</span>
-            </div>
-          </div>
+          <div class="form-group sm"><label for="monthDate">Sélectionner une date</label><input type="date" id="monthDate"></div>
+          <div class="form-group"><label>Mois</label><div class="pill" style="width:100%; justify-content:space-between;"><span id="monthLabel">--</span></div></div>
         </div>
         <div id="monthKpis" class="kpi-grid"></div>
       </div>
-
-      <div class="card">
-        <h2>📊 Répartition par type</h2>
-        <div id="monthStats"></div>
-      </div>
-
-      <div class="card">
-        <h2>🎯 Objectif mensuel</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="monthlyGoal">Objectif (nombre de contrats)</label>
-            <input type="number" id="monthlyGoal" min="0" placeholder="Ex: 120">
-          </div>
-        </div>
-        <div id="goalProgress"></div>
-      </div>
+      <div class="card"><h2>📊 Répartition par type</h2><div id="monthStats"></div></div>
+      <div class="card"><h2>🎯 Objectif mensuel</h2><div class="form-row"><div class="form-group"><label for="monthlyGoal">Objectif (nombre de contrats)</label><input type="number" id="monthlyGoal" min="0" placeholder="Ex: 120"></div></div><div id="goalProgress"></div></div>
     </div>
 
-    <!-- Tab Stats -->
     <div id="tab-stats" class="tab-content">
-      <div class="card">
-        <h2>📉 Statistiques globales</h2>
-        <div id="globalKpis" class="kpi-grid"></div>
-      </div>
-
-      <div class="card">
-        <h2>🏆 Records</h2>
-        <div id="recordsKpis" class="kpi-grid"></div>
-      </div>
-
-      <div class="card">
-        <h2>📊 Répartition globale par type</h2>
-        <div id="globalStats"></div>
-      </div>
+      <div class="card"><h2>📉 Statistiques globales</h2><div id="globalKpis" class="kpi-grid"></div></div>
+      <div class="card"><h2>🏆 Records</h2><div id="recordsKpis" class="kpi-grid"></div></div>
+      <div class="card"><h2>📊 Répartition globale par type</h2><div id="globalStats"></div></div>
     </div>
 
-    <!-- Tab Export -->
     <div id="tab-export" class="tab-content">
-      <div class="card">
-        <h2>📄 Export texte Semaine</h2>
-        <div class="form-row">
-          <div class="form-group sm">
-            <label for="exportWeekDate">Date semaine</label>
-            <input type="date" id="exportWeekDate">
-          </div>
-        </div>
-        <div class="btn-row">
-          <button type="button" id="btnGenerateWeek" class="btn-primary">📄 Générer export semaine</button>
-          <button type="button" id="btnCopyWeek" class="btn-ghost">📋 Copier</button>
-          <button type="button" id="btnGenerateWeekCompact" class="btn-ghost">🧾 Récap compact</button>
-        </div>
-        <div id="weekExportPreview" class="export-preview" style="margin-top:16px;"></div>
-      </div>
-
-      <div class="card">
-        <h2>📄 Export texte Mois</h2>
-        <div class="form-row">
-          <div class="form-group sm">
-            <label for="exportMonthDate">Date mois</label>
-            <input type="date" id="exportMonthDate">
-          </div>
-        </div>
-        <div class="btn-row">
-          <button type="button" id="btnGenerateMonth" class="btn-primary">📄 Générer export mois</button>
-          <button type="button" id="btnCopyMonth" class="btn-ghost">📋 Copier</button>
-          <button type="button" id="btnGenerateMonthCompact" class="btn-ghost">🧾 Récap compact</button>
-        </div>
-        <div id="monthExportPreview" class="export-preview" style="margin-top:16px;"></div>
-      </div>
-
       <div class="card">
         <h2>💾 Sauvegarde & Restauration</h2>
         <div class="btn-row">
@@ -971,64 +672,49 @@
           <button type="button" id="btnImportJSON" class="btn-ghost">📥 Importer JSON</button>
           <input type="file" id="importFile" accept=".json" style="display:none;">
         </div>
-        <div class="btn-row" style="margin-top:16px;">
-          <button type="button" id="btnClearAll" class="btn-danger">🗑️ Tout effacer</button>
-        </div>
-        <p style="margin-top:16px; font-size:13px; color:var(--muted);">
-          💡 Conseil : Exportez régulièrement vos données en JSON pour éviter toute perte.
-        </p>
       </div>
     </div>
   </main>
 
-  <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
     (function() {
       'use strict';
 
-      // ========== Configuration ==========
       const DB_NAME = 'remunerationProDB';
       const DB_VERSION = 3;
       const STORE_NAME = 'contracts';
-      const STORAGE_KEYS = {
-        theme: 'remuneration_theme',
-        goal: 'remuneration_monthly_goal',
-        lastBackup: 'remuneration_last_backup'
-      };
+      const STORAGE_KEYS = { theme: 'remuneration_theme', goal: 'remuneration_monthly_goal' };
 
-      // Contract types configuration
-      const PROVIDERS = ['PLENITUDE', 'PRIMEO'];
-      
       const CONTRACT_TYPES = {
         PLENITUDE: {
           ENERGY: [
-            { value: 'ELEC_3', label: 'Électricité 3 kVA', requiresPower: false, requiresConso: false },
-            { value: 'ELEC_6', label: 'Électricité 6 kVA', requiresPower: false, requiresConso: false },
-            { value: 'ELEC_9', label: 'Électricité 9 kVA', requiresPower: false, requiresConso: false },
-            { value: 'ELEC_12', label: 'Électricité 12 kVA', requiresPower: false, requiresConso: false },
-            { value: 'DUAL', label: 'Dual Énergie', requiresPower: true, requiresConso: true }
-          ],
-          IAG: [
-            { value: 'IAG_PJI', label: 'IAG - PJI', requiresPower: false, requiresConso: false },
-            { value: 'IAG_ELA', label: 'IAG - ELA', requiresPower: false, requiresConso: false }
+            { value: 'ELEC_3', label: 'Électricité 3 kVA' },
+            { value: 'ELEC_6', label: 'Électricité 6 kVA' },
+            { value: 'ELEC_9', label: 'Électricité 9 kVA' },
+            { value: 'ELEC_12', label: 'Électricité 12 kVA' },
+            { value: 'DUAL', label: 'Dual Énergie' }
           ]
         },
         PRIMEO: {
           ENERGY: [
-            { value: 'PRIMEO_ELEC_6', label: 'Primeo Électricité 6 kVA', requiresPower: false, requiresConso: false },
-            { value: 'PRIMEO_ELEC_9', label: 'Primeo Électricité 9 kVA', requiresPower: false, requiresConso: false },
-            { value: 'PRIMEO_ELEC_12', label: 'Primeo Électricité 12 kVA', requiresPower: false, requiresConso: false }
-          ],
-          IAG: []
+            { value: 'PRIMEO_ELEC_6', label: 'Primeo Électricité 6 kVA' },
+            { value: 'PRIMEO_ELEC_9', label: 'Primeo Électricité 9 kVA' },
+            { value: 'PRIMEO_ELEC_12', label: 'Primeo Électricité 12 kVA' }
+          ]
+        },
+        IAG_ONLY: {
+          IAG: [
+            { value: 'IAG_ONLY_PJI', label: 'IAG seul - PJI' },
+            { value: 'IAG_ONLY_ELA', label: 'IAG seul - ELA' }
+          ]
         }
       };
 
       const DUAL_POWER = ['3', '6', '9', '12'];
       const DUAL_CONSO = ['1-6', '6-13', '13+'];
 
-      // Tarif calculation
       const TARIFS = {
         ELEC_3: 2,
         ELEC_6: 7,
@@ -1058,26 +744,19 @@
         return 20;
       }
 
-      // ========== State ==========
       let contracts = [];
       let currentTab = 'contrats';
-
-      // Edit state
       let editingId = null;
 
-      // ========== DOM Elements ==========
       const $ = (sel) => document.querySelector(sel);
       const $$ = (sel) => document.querySelectorAll(sel);
 
-      // Header
       const currentDateEl = $('#currentDate');
       const themeToggle = $('#themeToggle');
 
-      // Tabs
       const tabBtns = $$('.tab-btn');
       const tabContents = $$('.tab-content');
 
-      // Form
       const formTitle = $('#formTitle');
       const btnSubmitContract = $('#btnSubmitContract');
       const btnCancelEdit = $('#btnCancelEdit');
@@ -1093,32 +772,30 @@
       const contractAxa = $('#contractAxa');
       const contractDigi = $('#contractDigi');
       const contractIagType = $('#contractIagType');
-      const formError = $('#formError');
-      const btnClearForm = $('#btnClearForm');
       const contractIagRef = $('#contractIagRef');
 
+      const formError = $('#formError');
+      const btnClearForm = $('#btnClearForm');
+
+      const typeGroup = $('#typeGroup');
       const powerGroup = $('#powerGroup');
       const consoGroup = $('#consoGroup');
       const optionsGroup = $('#optionsGroup');
       const iagGroup = $('#iagGroup');
+      const iagRefGroup = $('#iagRefGroup');
 
-      // Filters
       const searchName = $('#searchName');
       const filterProvider = $('#filterProvider');
       const filterDate = $('#filterDate');
 
-      // Lists
       const contractsList = $('#contractsList');
       const contractsEmpty = $('#contractsEmpty');
 
-      // Day
       const dayDate = $('#dayDate');
       const dayKpis = $('#dayKpis');
-      const dayNote = $('#dayNote');
       const dayContractsList = $('#dayContractsList');
       const dayContractsEmpty = $('#dayContractsEmpty');
 
-      // Week
       const weekDate = $('#weekDate');
       const weekRange = $('#weekRange');
       const weekNumber = $('#weekNumber');
@@ -1127,7 +804,6 @@
       const weekContractsList = $('#weekContractsList');
       const weekContractsEmpty = $('#weekContractsEmpty');
 
-      // Month
       const monthDate = $('#monthDate');
       const monthLabel = $('#monthLabel');
       const monthKpis = $('#monthKpis');
@@ -1135,35 +811,19 @@
       const monthlyGoal = $('#monthlyGoal');
       const goalProgress = $('#goalProgress');
 
-      // Stats
       const globalKpis = $('#globalKpis');
       const recordsKpis = $('#recordsKpis');
       const globalStats = $('#globalStats');
 
-      // Export
-      const exportWeekDate = $('#exportWeekDate');
-      const exportMonthDate = $('#exportMonthDate');
-      const btnGenerateWeek = $('#btnGenerateWeek');
-      const btnGenerateMonth = $('#btnGenerateMonth');
-      const btnCopyWeek = $('#btnCopyWeek');
-      const btnCopyMonth = $('#btnCopyMonth');
-      const btnGenerateWeekCompact = $('#btnGenerateWeekCompact');
-      const btnGenerateMonthCompact = $('#btnGenerateMonthCompact');
-      const weekExportPreview = $('#weekExportPreview');
-      const monthExportPreview = $('#monthExportPreview');
       const btnExportJSON = $('#btnExportJSON');
       const btnExportCSV = $('#btnExportCSV');
       const btnImportJSON = $('#btnImportJSON');
       const importFile = $('#importFile');
-      const btnClearAll = $('#btnClearAll');
 
-      // Toast
       const toastContainer = $('#toastContainer');
 
-      // ========== Utilities ==========
       function todayStr() {
-        const d = new Date();
-        return d.toISOString().slice(0, 10);
+        return new Date().toISOString().slice(0, 10);
       }
 
       function formatDate(dateStr) {
@@ -1175,45 +835,12 @@
         return amount.toFixed(2).replace('.', ',') + ' €';
       }
 
-      function getWeekNumber(d) {
-        const target = new Date(d.valueOf());
-        const dayNr = (d.getDay() + 6) % 7;
-        target.setDate(target.getDate() - dayNr + 3);
-        const firstThursday = target.valueOf();
-        target.setMonth(0, 1);
-        if (target.getDay() !== 4) {
-          target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-        }
-        return 1 + Math.ceil((firstThursday - target) / 604800000);
-      }
-
-      function getWeekRange(dateStr) {
-        const d = new Date(dateStr + 'T00:00:00');
-        const day = d.getDay();
-        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-        const monday = new Date(d.setDate(diff));
-        const sunday = new Date(monday);
-        sunday.setDate(monday.getDate() + 6);
-        return {
-          start: monday.toISOString().slice(0, 10),
-          end: sunday.toISOString().slice(0, 10),
-          week: getWeekNumber(monday)
-        };
-      }
-
-      function getMonthLabel(dateStr) {
-        const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 
-                        'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-        const [y, m] = dateStr.split('-');
-        return `${months[parseInt(m) - 1]} ${y}`;
-      }
-
       function showToast(message, type = 'info') {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         toast.textContent = message;
         toastContainer.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        setTimeout(() => toast.remove(), 2800);
       }
 
       function showError(msg) {
@@ -1226,44 +853,9 @@
         formError.classList.remove('show');
       }
 
-      function sanitizeContracts(raw) {
-        if (!Array.isArray(raw)) return [];
-        return raw.map((c) => {
-          const out = { ...c };
-          if (out.reference === undefined && out.ref !== undefined) out.reference = out.ref;
-          if (out.digitalisation === undefined && out.digi !== undefined) out.digitalisation = !!out.digi;
-          if (out.axa === undefined && out.AXA !== undefined) out.axa = !!out.AXA;
-          if (!out.id) out.id = Date.now() + '_' + Math.random().toString(36).slice(2);
-          if (!out.date) out.date = todayStr();
-          if (!out.name) out.name = 'SANS_NOM';
-          if (!out.provider) out.provider = 'PLENITUDE';
-          if (!out.type) out.type = 'ELEC_6';
-          if (String(out.type).startsWith('IAG_')) out.provider = 'PLENITUDE';
-          if (out.type !== 'DUAL') { out.power = null; out.conso = null; }
-          return out;
-        });
-      }
-
-      async function copyToClipboard(text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          showToast('Copié dans le presse-papier', 'success');
-        } catch {
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          ta.remove();
-          showToast('Copié dans le presse-papier', 'success');
-        }
-      }
-
-      // ========== IndexedDB ==========
       function openDB() {
         return new Promise((resolve, reject) => {
           const req = indexedDB.open(DB_NAME, DB_VERSION);
-          
           req.onupgradeneeded = (e) => {
             const db = e.target.result;
             let store;
@@ -1277,7 +869,6 @@
             if (!store.indexNames.contains('type')) store.createIndex('type', 'type', { unique: false });
             if (!store.indexNames.contains('reference')) store.createIndex('reference', 'reference', { unique: false });
           };
-
           req.onsuccess = (e) => resolve(e.target.result);
           req.onerror = (e) => reject(e.target.error);
         });
@@ -1305,337 +896,90 @@
         });
       }
 
-      async function bulkReplaceContracts(newContracts) {
-        const db = await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          store.clear();
-          newContracts.forEach(c => store.put(c));
-          tx.oncomplete = () => resolve();
-          tx.onerror = () => reject(tx.error);
+      function sanitizeContracts(raw) {
+        if (!Array.isArray(raw)) return [];
+        return raw.map((c) => {
+          const out = { ...c };
+          if (!out.id) out.id = Date.now() + '_' + Math.random().toString(36).slice(2);
+          if (!out.date) out.date = todayStr();
+          if (!out.name) out.name = 'SANS_NOM';
+          if (!out.provider) out.provider = 'PLENITUDE';
+          if (!out.type) out.type = 'ELEC_6';
+
+          if (out.iagReference && !out.reference) out.reference = out.iagReference;
+
+          if (out.provider === 'PRIMEO') {
+            out.axa = false;
+            out.digitalisation = false;
+          }
+
+          return out;
         });
       }
 
-      async function deleteContract(id) {
-        const db = await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          const req = store.delete(id);
-          req.onsuccess = () => resolve();
-          req.onerror = () => reject(req.error);
-        });
-      }
-
-      async function clearAllContracts() {
-        const db = await openDB();
-        return new Promise((resolve, reject) => {
-          const tx = db.transaction(STORE_NAME, 'readwrite');
-          const store = tx.objectStore(STORE_NAME);
-          const req = store.clear();
-          req.onsuccess = () => resolve();
-          req.onerror = () => reject(req.error);
-        });
-      }
-
-      // ========== Business Logic ==========
       function calculateAmount(contract) {
         let amount = 0;
-        if (String(contract.type).startsWith('IAG_')) return 0;
+        if (contract.provider === 'IAG_ONLY') return 0;
+        if (String(contract.type).startsWith('IAG_ONLY_')) return 0;
+        if (String(contract.type).startsWith('PRIMEO_')) amount = TARIFS[contract.type] || 0;
+        else if (contract.type === 'DUAL') amount = DUAL_TARIFS[`${contract.power}|${contract.conso}`] || 0;
+        else amount = TARIFS[contract.type] || 0;
 
-        if (String(contract.type).startsWith('PRIMEO_')) {
-          amount = TARIFS[contract.type] || 0;
-        } else if (contract.type === 'DUAL') {
-          const key = `${contract.power}|${contract.conso}`;
-          amount = DUAL_TARIFS[key] || 0;
-        } else {
-          amount = TARIFS[contract.type] || 0;
+        if (contract.provider === 'PLENITUDE') {
+          if (contract.axa) amount += TARIFS.AXA;
+          if (contract.digitalisation) amount += TARIFS.DIGI;
         }
-
-        if (contract.axa) amount += TARIFS.AXA;
-        if (contract.digitalisation) amount += TARIFS.DIGI;
         return amount;
       }
 
-      function computeStats(contractsSubset) {
-        const stats = {
-          total: contractsSubset.length,
-          energy: 0,
-          iag: 0,
-          plenitude: 0,
-          primeo: 0,
-          byType: {},
-          energyAmount: 0,
-          iagAmount: 0,
-          totalAmount: 0
-        };
-
-        contractsSubset.forEach(c => {
-          const hasIag = String(c.type).startsWith('IAG_') || !!c.iagType;
-          if (hasIag) stats.iag++;
-          if (!String(c.type).startsWith('IAG_')) stats.energy++;
-
+      function computeStats(list) {
+        const stats = { total: list.length, energy: 0, iag: 0, plenitude: 0, primeo: 0, iagOnly: 0, byType: {}, energyAmount: 0, iagAmount: 0, totalAmount: 0 };
+        list.forEach(c => {
+          const isIagOnly = c.provider === 'IAG_ONLY' || String(c.type).startsWith('IAG_ONLY_');
+          const hasIagOption = !!c.iagType;
           if (c.provider === 'PLENITUDE') stats.plenitude++;
           if (c.provider === 'PRIMEO') stats.primeo++;
+          if (isIagOnly) stats.iagOnly++;
 
-          const typeKey = c.type + (c.type === 'DUAL' ? `_${c.power}_${c.conso}` : '');
-          stats.byType[typeKey] = (stats.byType[typeKey] || 0) + 1;
+          if (!isIagOnly && !String(c.type).startsWith('IAG_')) stats.energy++;
+          if (isIagOnly || hasIagOption || String(c.type).startsWith('IAG_')) stats.iag++;
 
+          stats.byType[c.type] = (stats.byType[c.type] || 0) + 1;
           stats.energyAmount += calculateAmount(c);
         });
-
         const iagTarif = getIAGTarif(stats.iag);
         stats.iagAmount = stats.iag * iagTarif;
         stats.totalAmount = stats.energyAmount + stats.iagAmount;
         return stats;
       }
 
-      function contractTypeLabel(c) {
-        if (String(c.type).startsWith('IAG_')) return `IAG ${String(c.type).split('_')[1]}`;
-        if (c.type === 'DUAL') return `Dual ${c.power}/${c.conso}`;
-        if (String(c.type).startsWith('PRIMEO_')) return c.type.replace(/PRIMEO_/, 'Primeo ').replace(/_/g, ' ');
-        return String(c.type).replace(/_/g, ' ');
-      }
-
-      function filterContracts(list, filters) {
-        return list.filter(c => {
-          if (filters.search) {
-            const search = filters.search.toLowerCase();
-            const name = (c.name || '').toLowerCase();
-            const ref = (c.reference || '').toLowerCase();
-            const iagRef = (c.iagReference || '').toLowerCase();
-            if (!name.includes(search) && !ref.includes(search) && !iagRef.includes(search)) return false;
-          }
-          if (filters.provider && c.provider !== filters.provider) return false;
-          if (filters.date && c.date !== filters.date) return false;
-          return true;
-        });
-      }
-
-      function getContractsByPeriod(list, startDate, endDate) {
-        return list.filter(c => c.date >= startDate && c.date <= endDate);
-      }
-
-      function groupByDate(list) {
-        const map = {};
-        list.forEach(c => {
-          map[c.date] = map[c.date] || [];
-          map[c.date].push(c);
-        });
-        return map;
-      }
-
-      function buildWeekExportText(dateStr) {
-        const week = getWeekRange(dateStr);
-        const weekContracts = getContractsByPeriod(contracts, week.start, week.end);
-        const stats = computeStats(weekContracts);
-
-        const lines = [];
-        lines.push(`Semaine ${week.week} (${formatDate(week.start)} → ${formatDate(week.end)})`);
-        lines.push(`Total contrats: ${stats.total} | Energie: ${stats.energy} | IAG: ${stats.iag}`);
-        lines.push(`Plenitude: ${stats.plenitude} | Primeo: ${stats.primeo}`);
-        lines.push(`€ Energie: ${formatEuro(stats.energyAmount)} | € IAG: ${formatEuro(stats.iagAmount)} | € Total: ${formatEuro(stats.totalAmount)}`);
-        lines.push('');
-        lines.push('Détail contrats:');
-
-        if (weekContracts.length === 0) {
-          lines.push('- Aucun contrat');
-        } else {
-          weekContracts
-            .slice()
-            .sort((a,b)=>a.date.localeCompare(b.date))
-            .forEach(c => {
-              const opts = [];
-              if (c.axa) opts.push('AXA');
-              if (c.digitalisation) opts.push('Digi');
-              if (c.iagType) opts.push(`IAG ${c.iagType}${c.iagReference ? ` (${c.iagReference})` : ''}`);
-              const optTxt = opts.length ? ` | ${opts.join(' / ')}` : '';
-              lines.push(`- ${formatDate(c.date)} | ${c.name} | ${c.reference} | ${contractTypeLabel(c)} | ${c.provider} | ${formatEuro(calculateAmount(c))}${optTxt}`);
-            });
-        }
-
-        return lines.join('\n');
-      }
-
-      function buildWeekExportCompactText(dateStr) {
-        const week = getWeekRange(dateStr);
-        const weekContracts = getContractsByPeriod(contracts, week.start, week.end);
-        const byDate = groupByDate(weekContracts);
-
-        const lines = [];
-        lines.push(`Récap Semaine ${week.week} (${formatDate(week.start)} → ${formatDate(week.end)})`);
-        lines.push('');
-
-        const dates = Object.keys(byDate).sort();
-        if (dates.length === 0) {
-          lines.push('- Aucun contrat');
-          return lines.join('\n');
-        }
-
-        dates.forEach(ds => {
-          const st = computeStats(byDate[ds]);
-          lines.push(`${formatDate(ds)} : ${st.total} contrats (E:${st.energy} / I:${st.iag}) | €E ${formatEuro(st.energyAmount)} | €I ${formatEuro(st.iagAmount)} | €T ${formatEuro(st.totalAmount)}`);
-        });
-
-        const total = computeStats(weekContracts);
-        lines.push('');
-        lines.push(`TOTAL : ${total.total} contrats | €E ${formatEuro(total.energyAmount)} | €I ${formatEuro(total.iagAmount)} | €T ${formatEuro(total.totalAmount)}`);
-        return lines.join('\n');
-      }
-
-      function buildMonthExportText(dateStr) {
-        const monthStr = dateStr.slice(0,7);
-        const monthContracts = contracts.filter(c => c.date.startsWith(monthStr));
-        const stats = computeStats(monthContracts);
-
-        const lines = [];
-        lines.push(`Mois: ${getMonthLabel(dateStr)}`);
-        lines.push(`Total contrats: ${stats.total} | Energie: ${stats.energy} | IAG: ${stats.iag} (${stats.total>0?((stats.iag/stats.total)*100).toFixed(1):0}%)`);
-        lines.push(`Plenitude: ${stats.plenitude} | Primeo: ${stats.primeo}`);
-        lines.push(`Tarif IAG: ${formatEuro(getIAGTarif(stats.iag))} par IAG`);
-        lines.push(`€ Energie: ${formatEuro(stats.energyAmount)} | € IAG: ${formatEuro(stats.iagAmount)} | € Total: ${formatEuro(stats.totalAmount)}`);
-        lines.push('');
-        lines.push('Détail contrats:');
-
-        if (monthContracts.length === 0) {
-          lines.push('- Aucun contrat');
-        } else {
-          monthContracts
-            .slice()
-            .sort((a,b)=>a.date.localeCompare(b.date))
-            .forEach(c => {
-              const opts = [];
-              if (c.axa) opts.push('AXA');
-              if (c.digitalisation) opts.push('Digi');
-              if (c.iagType) opts.push(`IAG ${c.iagType}${c.iagReference ? ` (${c.iagReference})` : ''}`);
-              const optTxt = opts.length ? ` | ${opts.join(' / ')}` : '';
-              lines.push(`- ${formatDate(c.date)} | ${c.name} | ${c.reference} | ${contractTypeLabel(c)} | ${c.provider} | ${formatEuro(calculateAmount(c))}${optTxt}`);
-            });
-        }
-
-        return lines.join('\n');
-      }
-
-      function buildMonthExportCompactText(dateStr) {
-        const monthStr = dateStr.slice(0,7);
-        const monthContracts = contracts.filter(c => c.date.startsWith(monthStr));
-        const stats = computeStats(monthContracts);
-
-        const lines = [];
-        lines.push(`Récap Mois: ${getMonthLabel(dateStr)}`);
-        lines.push(`Total: ${stats.total} | €E ${formatEuro(stats.energyAmount)} | €I ${formatEuro(stats.iagAmount)} | €T ${formatEuro(stats.totalAmount)}`);
-        lines.push('');
-
-        const byType = Object.entries(stats.byType).sort((a,b)=>b[1]-a[1]);
-        if (byType.length === 0) {
-          lines.push('- Aucun contrat');
-          return lines.join('\n');
-        }
-
-        byType.forEach(([typeKey, count]) => {
-          const pct = stats.total > 0 ? (count / stats.total * 100) : 0;
-          lines.push(`${typeKey.replace(/_/g,' ')} : ${count} (${pct.toFixed(1)}%)`);
-        });
-
-        return lines.join('\n');
-      }
-
-      function toCSV(rows) {
-        const esc = (v) => {
-          const s = String(v ?? '');
-          if (/[";\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
-          return s;
-        };
-        return rows.map(r => r.map(esc).join(';')).join('\n');
-      }
-
-      function normalizeReference(ref) {
-        return String(ref || '').trim().toLowerCase();
-      }
-
-      function isDuplicateReference(reference, exceptId = null) {
-        const refNorm = normalizeReference(reference);
-        if (!refNorm) return false;
-        return contracts.some(c => normalizeReference(c.reference) === refNorm && c.id !== exceptId);
-      }
-
-      function setEditMode(id) {
-        editingId = id;
-        formTitle.textContent = '✏️ Modifier un contrat';
-        btnSubmitContract.textContent = '💾 Enregistrer modifications';
-        btnCancelEdit.style.display = '';
-      }
-
-      function clearEditMode() {
-        editingId = null;
-        formTitle.textContent = '➕ Ajouter un contrat';
-        btnSubmitContract.textContent = '➕ Ajouter le contrat';
-        btnCancelEdit.style.display = 'none';
-      }
-
-      function fillFormFromContract(c) {
-        contractDate.value = c.date;
-        contractName.value = c.name || '';
-        contractRef.value = c.reference || '';
-
-        contractProvider.value = c.provider || '';
-        contractType.dataset.provider = '';
-        updateFormFields();
-
-        contractType.value = c.type || '';
-        updateFormFields();
-
-        contractAxa.checked = !!c.axa;
-        contractDigi.checked = !!c.digitalisation;
-
-        if (c.type === 'DUAL') {
-          contractPower.value = c.power || DUAL_POWER[0];
-          contractConso.value = c.conso || DUAL_CONSO[0];
-        }
-
-        contractIagType.value = c.iagType || '';
-        contractIagRef.value = c.iagReference || '';
-      }
-
-      // ========== Form Management ==========
       function populateTypeOptions(provider) {
         contractType.innerHTML = '<option value="">-- Choisir --</option>';
-
-        const types = CONTRACT_TYPES[provider];
-        if (!types) return;
-
-        const energyGroup = document.createElement('optgroup');
-        energyGroup.label = 'Énergie';
-        types.ENERGY.forEach(t => {
-          const opt = document.createElement('option');
-          opt.value = t.value;
-          opt.textContent = t.label;
-          energyGroup.appendChild(opt);
-        });
-        contractType.appendChild(energyGroup);
-
-        if (types.IAG && types.IAG.length) {
-          const iagOptGroup = document.createElement('optgroup');
-          iagOptGroup.label = 'IAG';
-          types.IAG.forEach(t => {
+        const cfg = CONTRACT_TYPES[provider];
+        if (!cfg) return;
+        const groups = Object.keys(cfg);
+        groups.forEach(groupName => {
+          const og = document.createElement('optgroup');
+          og.label = groupName === 'ENERGY' ? 'Énergie' : 'IAG';
+          cfg[groupName].forEach(t => {
             const opt = document.createElement('option');
             opt.value = t.value;
             opt.textContent = t.label;
-            iagOptGroup.appendChild(opt);
+            og.appendChild(opt);
           });
-          contractType.appendChild(iagOptGroup);
-        }
+          contractType.appendChild(og);
+        });
       }
 
       function updateFormFields() {
         const provider = contractProvider.value;
         const type = contractType.value;
-
         powerGroup.style.display = 'none';
         consoGroup.style.display = 'none';
         optionsGroup.style.display = 'none';
         iagGroup.style.display = 'none';
+        iagRefGroup.style.display = 'none';
+        typeGroup.style.display = '';
 
         if (!provider) {
           populateTypeOptions('');
@@ -1647,28 +991,221 @@
           contractType.dataset.provider = provider;
         }
 
+        if (provider === 'IAG_ONLY') {
+          iagRefGroup.style.display = '';
+          return;
+        }
+
+        iagGroup.style.display = '';
+        iagRefGroup.style.display = '';
+
         if (!type) return;
 
         if (type === 'DUAL') {
           powerGroup.style.display = '';
           consoGroup.style.display = '';
-          optionsGroup.style.display = '';
-
+          if (provider === 'PLENITUDE') optionsGroup.style.display = '';
           contractPower.innerHTML = DUAL_POWER.map(p => `<option value="${p}">${p} kVA</option>`).join('');
           contractConso.innerHTML = DUAL_CONSO.map(c => `<option value="${c}">${c} MWh</option>`).join('');
-        } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12', 'PRIMEO_ELEC_6', 'PRIMEO_ELEC_9', 'PRIMEO_ELEC_12'].includes(type)) {
-          optionsGroup.style.display = '';
+        } else {
+          const isEnergy = ['ELEC_3','ELEC_6','ELEC_9','ELEC_12','PRIMEO_ELEC_6','PRIMEO_ELEC_9','PRIMEO_ELEC_12'].includes(type);
+          if (isEnergy && provider === 'PLENITUDE') optionsGroup.style.display = '';
         }
 
-        if (!String(type).startsWith('IAG_')) {
-          iagGroup.style.display = '';
+        if (provider === 'PRIMEO') {
+          contractAxa.checked = false;
+          contractDigi.checked = false;
         }
       }
 
-      contractProvider.addEventListener('change', () => {
-        contractType.dataset.provider = '';
-        updateFormFields();
-      });
+      function normalizeReference(ref) { return String(ref || '').trim().toLowerCase(); }
+      function isDuplicateReference(reference, exceptId=null) {
+        const refNorm = normalizeReference(reference);
+        if (!refNorm) return false;
+        return contracts.some(c => normalizeReference(c.reference) === refNorm && c.id !== exceptId);
+      }
+
+      function contractTypeLabel(c) {
+        if (c.provider === 'IAG_ONLY') return c.type === 'IAG_ONLY_PJI' ? 'IAG seul PJI' : 'IAG seul ELA';
+        if (String(c.type).startsWith('PRIMEO_')) return c.type.replace(/PRIMEO_/, 'Primeo ').replace(/_/g, ' ');
+        if (c.type === 'DUAL') return `Dual ${c.power}/${c.conso}`;
+        return String(c.type).replace(/_/g,' ');
+      }
+
+      function renderContractItem(contract) {
+        const div = document.createElement('div');
+        div.className = 'list-item';
+        const content = document.createElement('div');
+        content.className = 'list-item-content';
+        const title = document.createElement('div');
+        title.className = 'list-item-title';
+        title.textContent = contract.name;
+        const meta = document.createElement('div');
+        meta.className = 'list-item-meta';
+
+        let metaText = `📅 ${formatDate(contract.date)} • 🔖 ${contract.reference} • ${contractTypeLabel(contract)}`;
+        if (contract.provider !== 'IAG_ONLY') {
+          if (contract.axa) metaText += ' • AXA';
+          if (contract.digitalisation) metaText += ' • Digi';
+          if (contract.iagType) metaText += ` • IAG ${contract.iagType}`;
+          if (contract.iagReference) metaText += ` • Ref IAG ${contract.iagReference}`;
+        }
+        meta.textContent = metaText;
+        content.appendChild(title);
+        content.appendChild(meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'list-item-actions';
+        const badge = document.createElement('span');
+        badge.className = `badge badge-${String(contract.provider).toLowerCase()}`;
+        badge.textContent = contract.provider === 'IAG_ONLY' ? 'IAG' : contract.provider;
+        const amount = document.createElement('div');
+        amount.className = 'amount';
+        amount.textContent = formatEuro(calculateAmount(contract));
+        actions.appendChild(badge);
+        actions.appendChild(amount);
+        div.appendChild(content);
+        div.appendChild(actions);
+        return div;
+      }
+
+      function filterContracts(list, filters) {
+        return list.filter(c => {
+          if (filters.search) {
+            const s = filters.search.toLowerCase();
+            if (!String(c.name||'').toLowerCase().includes(s) && !String(c.reference||'').toLowerCase().includes(s) && !String(c.iagReference||'').toLowerCase().includes(s)) return false;
+          }
+          if (filters.provider && c.provider !== filters.provider) return false;
+          if (filters.date && c.date !== filters.date) return false;
+          return true;
+        });
+      }
+
+      function getWeekNumber(d) {
+        const target = new Date(d.valueOf());
+        const dayNr = (d.getDay() + 6) % 7;
+        target.setDate(target.getDate() - dayNr + 3);
+        const firstThursday = target.valueOf();
+        target.setMonth(0, 1);
+        if (target.getDay() !== 4) {
+          target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
+        }
+        return 1 + Math.ceil((firstThursday - target) / 604800000);
+      }
+
+      function getWeekRange(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const monday = new Date(d.setDate(diff));
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        return { start: monday.toISOString().slice(0,10), end: sunday.toISOString().slice(0,10), week: getWeekNumber(monday) };
+      }
+
+      function getContractsByPeriod(list, startDate, endDate) {
+        return list.filter(c => c.date >= startDate && c.date <= endDate);
+      }
+
+      function renderContractsList() {
+        const filtered = filterContracts(contracts, { search: searchName.value, provider: filterProvider.value, date: filterDate.value });
+        contractsList.innerHTML = '';
+        if (filtered.length === 0) {
+          contractsEmpty.style.display = '';
+          return;
+        }
+        contractsEmpty.style.display = 'none';
+        filtered.forEach(c => contractsList.appendChild(renderContractItem(c)));
+      }
+
+      function renderDay() {
+        const date = dayDate.value;
+        const list = contracts.filter(c => c.date === date);
+        const stats = computeStats(list);
+        dayKpis.innerHTML = `
+          <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">${stats.total}</div></div>
+          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
+          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div><div class="kpi-sub">Inclut IAG seul</div></div>
+          <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
+          <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div></div>
+          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
+        `;
+        dayContractsList.innerHTML = '';
+        if (list.length === 0) { dayContractsEmpty.style.display=''; return; }
+        dayContractsEmpty.style.display='none';
+        list.forEach(c => dayContractsList.appendChild(renderContractItem(c)));
+      }
+
+      function renderWeek() {
+        const date = weekDate.value;
+        const week = getWeekRange(date);
+        weekRange.textContent = `${formatDate(week.start)} → ${formatDate(week.end)}`;
+        weekNumber.textContent = `Semaine ${week.week}`;
+        const list = getContractsByPeriod(contracts, week.start, week.end);
+        const stats = computeStats(list);
+        weekKpis.innerHTML = `
+          <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">${stats.total}</div></div>
+          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
+          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div><div class="kpi-sub">Inclut IAG seul</div></div>
+          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
+        `;
+        weekStats.innerHTML = '';
+        Object.entries(stats.byType).sort((a,b)=>b[1]-a[1]).forEach(([type,count])=>{
+          const bar = document.createElement('div');
+          bar.className='kpi';
+          bar.innerHTML = `<div class="kpi-label">${type.replace(/_/g,' ')}</div><div class="kpi-value">${count}</div>`;
+          weekStats.appendChild(bar);
+        });
+        weekContractsList.innerHTML = '';
+        if (list.length === 0) { weekContractsEmpty.style.display=''; return; }
+        weekContractsEmpty.style.display='none';
+        list.forEach(c=>weekContractsList.appendChild(renderContractItem(c)));
+      }
+
+      function renderMonth() {
+        const date = monthDate.value;
+        const monthStr = date.slice(0,7);
+        monthLabel.textContent = monthStr;
+        const list = contracts.filter(c => c.date.startsWith(monthStr));
+        const stats = computeStats(list);
+        monthKpis.innerHTML = `
+          <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">${stats.total}</div></div>
+          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
+          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div><div class="kpi-sub">Inclut IAG seul</div></div>
+          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
+        `;
+        monthStats.innerHTML = '';
+        Object.entries(stats.byType).sort((a,b)=>b[1]-a[1]).forEach(([type,count])=>{
+          const el = document.createElement('div');
+          el.className='kpi';
+          el.innerHTML = `<div class="kpi-label">${type.replace(/_/g,' ')}</div><div class="kpi-value">${count}</div>`;
+          monthStats.appendChild(el);
+        });
+        const goal = parseInt(monthlyGoal.value)||0;
+        goalProgress.innerHTML = goal>0 ? `<div class="kpi"><div class="kpi-label">Objectif</div><div class="kpi-value">${stats.total}/${goal}</div></div>` : '';
+      }
+
+      function renderStats() {
+        const stats = computeStats(contracts);
+        globalKpis.innerHTML = `
+          <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">${stats.total}</div></div>
+          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
+          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div><div class="kpi-sub">Inclut IAG seul</div></div>
+          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
+        `;
+        recordsKpis.innerHTML = '';
+        globalStats.innerHTML = '';
+      }
+
+      function renderAll() {
+        renderContractsList();
+        if (currentTab==='jour') renderDay();
+        if (currentTab==='semaine') renderWeek();
+        if (currentTab==='mois') renderMonth();
+        if (currentTab==='stats') renderStats();
+      }
+
+      contractProvider.addEventListener('change', ()=>{ contractType.dataset.provider=''; updateFormFields(); });
       contractType.addEventListener('change', updateFormFields);
 
       function resetFormUI() {
@@ -1677,39 +1214,76 @@
         contractType.dataset.provider = '';
         updateFormFields();
         clearError();
-        clearEditMode();
+        editingId = null;
+        formTitle.textContent = '➕ Ajouter un contrat';
+        btnSubmitContract.textContent = '➕ Ajouter le contrat';
+        btnCancelEdit.style.display='none';
       }
 
       btnClearForm.addEventListener('click', resetFormUI);
       btnCancelEdit.addEventListener('click', resetFormUI);
 
-      addContractForm.addEventListener('submit', async (e) => {
+      addContractForm.addEventListener('submit', async (e)=>{
         e.preventDefault();
         clearError();
 
         const date = contractDate.value.trim();
         const name = contractName.value.trim().toUpperCase();
-        const reference = contractRef.value.trim();
         const provider = contractProvider.value;
         const type = contractType.value;
-        const iagTypeSelected = contractIagType.value;
-        const iagReferenceInput = contractIagRef.value.trim();
 
-        if (!date || !name || !reference || !provider || !type) {
-          showError('Tous les champs obligatoires (*) doivent être remplis.');
+        const refMain = contractRef.value.trim();
+        const iagTypeSelected = contractIagType.value;
+        const iagRef = contractIagRef.value.trim();
+
+        if (!date || !name || !provider) { showError('Tous les champs obligatoires (*) doivent être remplis.'); return; }
+
+        if (provider === 'IAG_ONLY') {
+          if (!type) { showError('Veuillez choisir un type IAG.'); return; }
+          if (!refMain) { showError('Veuillez saisir la référence IAG (champ Référence *).'); return; }
+
+          if (isDuplicateReference(refMain, editingId)) {
+            const ok = confirm('⚠️ Doublon détecté : cette référence existe déjà. Continuer quand même ?');
+            if (!ok) return;
+          }
+
+          const c = {
+            id: editingId || (Date.now() + '_' + Math.random().toString(36).slice(2, 9)),
+            date,
+            name,
+            reference: refMain,
+            provider: 'IAG_ONLY',
+            type,
+            power: null,
+            conso: null,
+            axa: false,
+            digitalisation: false,
+            iagType: type === 'IAG_ONLY_PJI' ? 'PJI' : 'ELA',
+            iagReference: refMain
+          };
+
+          await saveContract(c);
+          const idx = contracts.findIndex(x=>x.id===c.id);
+          if (idx>=0) contracts[idx]=c; else contracts.push(c);
+          contracts.sort((a,b)=>b.date.localeCompare(a.date));
+          showToast('✅ IAG seul ajouté', 'success');
+          resetFormUI();
+          renderAll();
           return;
         }
 
-        if (isDuplicateReference(reference, editingId)) {
+        if (!refMain || !type) { showError('Tous les champs obligatoires (*) doivent être remplis.'); return; }
+
+        if (isDuplicateReference(refMain, editingId)) {
           const ok = confirm('⚠️ Doublon détecté : cette référence existe déjà. Continuer quand même ?');
           if (!ok) return;
         }
 
         const base = {
-          id: editingId || (Date.now() + '_' + Math.random().toString(36).substr(2, 9)),
+          id: editingId || (Date.now() + '_' + Math.random().toString(36).slice(2, 9)),
           date,
           name,
-          reference,
+          reference: refMain,
           provider,
           type,
           power: null,
@@ -1723,331 +1297,42 @@
         if (type === 'DUAL') {
           base.power = contractPower.value;
           base.conso = contractConso.value;
-          if (!base.power || !base.conso) {
-            showError('Veuillez sélectionner la puissance et la consommation.');
-            return;
-          }
+          if (!base.power || !base.conso) { showError('Veuillez sélectionner la puissance et la consommation.'); return; }
+        }
+
+        if (provider === 'PLENITUDE') {
           base.axa = contractAxa.checked;
           base.digitalisation = contractDigi.checked;
-        } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12', 'PRIMEO_ELEC_6', 'PRIMEO_ELEC_9', 'PRIMEO_ELEC_12'].includes(type)) {
-          base.axa = contractAxa.checked;
-          base.digitalisation = contractDigi.checked;
-        }
-
-        if (!String(type).startsWith('IAG_') && iagTypeSelected && !iagReferenceInput) {
-          showError('Veuillez saisir la référence IAG.');
-          return;
-        }
-
-        if (!String(type).startsWith('IAG_') && iagTypeSelected) {
-          base.iagType = iagTypeSelected;
-          base.iagReference = iagReferenceInput ? iagReferenceInput : null;
-        }
-
-        if (String(type).startsWith('IAG_')) {
-          base.provider = 'PLENITUDE';
-        }
-
-        try {
-          await saveContract(base);
-
-          const existingIdx = contracts.findIndex(c => c.id === base.id);
-          if (existingIdx >= 0) {
-            contracts[existingIdx] = base;
-            showToast('✅ Contrat modifié', 'success');
-          } else {
-            contracts.push(base);
-            showToast('✅ Contrat ajouté avec succès', 'success');
-          }
-
-          contracts.sort((a, b) => b.date.localeCompare(a.date));
-          resetFormUI();
-          renderAll();
-        } catch (err) {
-          showError('Erreur lors de l\'enregistrement : ' + err.message);
-        }
-      });
-
-      // ========== Rendering ==========
-      function renderContractItem(contract) {
-        const div = document.createElement('div');
-        div.className = 'list-item';
-
-        const content = document.createElement('div');
-        content.className = 'list-item-content';
-
-        const title = document.createElement('div');
-        title.className = 'list-item-title';
-        title.textContent = contract.name;
-
-        const meta = document.createElement('div');
-        meta.className = 'list-item-meta';
-
-        let metaText = `📅 ${formatDate(contract.date)} • 🔖 ${contract.reference} • `;
-        metaText += `${contractTypeLabel(contract)}`;
-
-        if (contract.axa) metaText += ' • AXA';
-        if (contract.digitalisation) metaText += ' • Digi';
-        if (contract.iagType) metaText += ` • IAG ${contract.iagType}`;
-        if (contract.iagReference) metaText += ` • Ref IAG ${contract.iagReference}`;
-
-        meta.textContent = metaText;
-
-        content.appendChild(title);
-        content.appendChild(meta);
-
-        const actions = document.createElement('div');
-        actions.className = 'list-item-actions';
-
-        const badge = document.createElement('span');
-        badge.className = `badge badge-${String(contract.provider).toLowerCase()}`;
-        badge.textContent = contract.provider;
-
-        const amount = document.createElement('div');
-        amount.className = 'amount';
-        amount.textContent = formatEuro(calculateAmount(contract));
-
-        const editBtn = document.createElement('button');
-        editBtn.className = 'btn-sm btn-ghost';
-        editBtn.textContent = '✏️';
-        editBtn.title = 'Modifier';
-        editBtn.onclick = () => {
-          setEditMode(contract.id);
-          fillFormFromContract(contract);
-          showToast('Mode édition activé', 'info');
-          if (currentTab !== 'contrats') {
-            document.querySelector('.tab-btn[data-tab="contrats"]').click();
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn-sm btn-danger';
-        deleteBtn.textContent = '🗑️';
-        deleteBtn.title = 'Supprimer';
-        deleteBtn.onclick = async () => {
-          if (confirm(`Supprimer le contrat ${contract.name} ?`)) {
-            await deleteContract(contract.id);
-            contracts = contracts.filter(c => c.id !== contract.id);
-            if (editingId === contract.id) resetFormUI();
-            showToast('Contrat supprimé', 'warning');
-            renderAll();
-          }
-        };
-
-        actions.appendChild(badge);
-        actions.appendChild(amount);
-        actions.appendChild(editBtn);
-        actions.appendChild(deleteBtn);
-
-        div.appendChild(content);
-        div.appendChild(actions);
-
-        return div;
-      }
-
-      function renderContractsList() {
-        const filters = {
-          search: searchName.value,
-          provider: filterProvider.value,
-          date: filterDate.value
-        };
-
-        const filtered = filterContracts(contracts, filters);
-
-        if (filtered.length === 0) {
-          contractsList.style.display = 'none';
-          contractsEmpty.style.display = '';
-          return;
-        }
-
-        contractsList.style.display = '';
-        contractsEmpty.style.display = 'none';
-        contractsList.innerHTML = '';
-
-        filtered.forEach(c => {
-          contractsList.appendChild(renderContractItem(c));
-        });
-      }
-
-      function renderDay() {
-        const date = dayDate.value;
-        const dayContracts = contracts.filter(c => c.date === date);
-        const stats = computeStats(dayContracts);
-
-        dayKpis.innerHTML = `
-          <div class="kpi"><div class="kpi-label">Total contrats</div><div class="kpi-value">${stats.total}</div></div>
-          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
-          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div><div class="kpi-sub">Tarif: ${formatEuro(getIAGTarif(stats.iag))}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
-        `;
-
-        dayNote.textContent = `Date analysée : ${formatDate(date)}`;
-
-        if (dayContracts.length === 0) {
-          dayContractsList.style.display = 'none';
-          dayContractsEmpty.style.display = '';
-          return;
-        }
-
-        dayContractsList.style.display = '';
-        dayContractsEmpty.style.display = 'none';
-        dayContractsList.innerHTML = '';
-        dayContracts.forEach(c => dayContractsList.appendChild(renderContractItem(c)));
-      }
-
-      function renderWeek() {
-        const date = weekDate.value;
-        const week = getWeekRange(date);
-        const weekContracts = getContractsByPeriod(contracts, week.start, week.end);
-        const stats = computeStats(weekContracts);
-
-        weekRange.textContent = `${formatDate(week.start)} → ${formatDate(week.end)}`;
-        weekNumber.textContent = `Semaine ${week.week}`;
-
-        weekKpis.innerHTML = `
-          <div class="kpi"><div class="kpi-label">Total contrats</div><div class="kpi-value">${stats.total}</div></div>
-          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
-          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div><div class="kpi-sub">Tarif: ${formatEuro(getIAGTarif(stats.iag))}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
-        `;
-
-        weekStats.innerHTML = '';
-        Object.entries(stats.byType).sort((a,b) => b[1]-a[1]).forEach(([type, count]) => {
-          const bar = document.createElement('div');
-          bar.className = 'stat-bar';
-          const pct = stats.total > 0 ? (count / stats.total * 100) : 0;
-          bar.innerHTML = `
-            <div class="stat-bar-header"><div class="stat-bar-title">${type.replace(/_/g,' ')}</div><div class="stat-bar-value">${count}</div></div>
-            <div class="stat-bar-progress"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
-          `;
-          weekStats.appendChild(bar);
-        });
-
-        weekContractsList.innerHTML = '';
-        if (weekContracts.length === 0) {
-          weekContractsList.style.display = 'none';
-          weekContractsEmpty.style.display = '';
-          return;
-        }
-        weekContractsList.style.display = '';
-        weekContractsEmpty.style.display = 'none';
-        weekContracts.forEach(c => weekContractsList.appendChild(renderContractItem(c)));
-      }
-
-      function renderMonth() {
-        const date = monthDate.value;
-        const monthStr = date.slice(0,7);
-        const monthContracts = contracts.filter(c => c.date.startsWith(monthStr));
-        const stats = computeStats(monthContracts);
-
-        monthLabel.textContent = getMonthLabel(date);
-
-        monthKpis.innerHTML = `
-          <div class="kpi"><div class="kpi-label">Total contrats</div><div class="kpi-value">${stats.total}</div></div>
-          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
-          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div></div>
-          <div class="kpi"><div class="kpi-label">% IAG</div><div class="kpi-value">${stats.total > 0 ? ((stats.iag / stats.total)*100).toFixed(1):0}%</div></div>
-          <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div><div class="kpi-sub">Tarif: ${formatEuro(getIAGTarif(stats.iag))}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">Tarif IAG</div><div class="kpi-value">${formatEuro(getIAGTarif(stats.iag))}</div><div class="kpi-sub">Par IAG</div></div>
-        `;
-
-        monthStats.innerHTML = '';
-        Object.entries(stats.byType).sort((a,b) => b[1]-a[1]).forEach(([type, count]) => {
-          const bar = document.createElement('div');
-          bar.className = 'stat-bar';
-          const pct = stats.total > 0 ? (count / stats.total * 100) : 0;
-          bar.innerHTML = `
-            <div class="stat-bar-header"><div class="stat-bar-title">${type.replace(/_/g,' ')}</div><div class="stat-bar-value">${count}</div></div>
-            <div class="stat-bar-progress"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
-          `;
-          monthStats.appendChild(bar);
-        });
-
-        const goal = parseInt(monthlyGoal.value) || 0;
-        if (goal > 0) {
-          const pct = Math.min(100, (stats.total / goal) * 100);
-          goalProgress.innerHTML = `
-            <div class="stat-bar">
-              <div class="stat-bar-header"><div class="stat-bar-title">Progression objectif</div><div class="stat-bar-value">${stats.total} / ${goal}</div></div>
-              <div class="stat-bar-progress"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
-            </div>
-            <p style="margin-top:12px; font-size:13px; color:var(--muted);">${pct.toFixed(1)}% de l'objectif atteint</p>
-          `;
         } else {
-          goalProgress.innerHTML = '<p style="color:var(--muted); font-size:13px;">Définissez un objectif mensuel ci-dessus.</p>';
+          base.axa = false;
+          base.digitalisation = false;
         }
-      }
 
-      function renderStats() {
-        const stats = computeStats(contracts);
+        if (iagTypeSelected) {
+          if (!iagRef) { showError('Veuillez saisir la référence IAG.'); return; }
+          base.iagType = iagTypeSelected;
+          base.iagReference = iagRef;
+        }
 
-        globalKpis.innerHTML = `
-          <div class="kpi"><div class="kpi-label">Total contrats</div><div class="kpi-value">${stats.total}</div></div>
-          <div class="kpi"><div class="kpi-label">Énergie</div><div class="kpi-value">${stats.energy}</div></div>
-          <div class="kpi"><div class="kpi-label">IAG</div><div class="kpi-value">${stats.iag}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div></div>
-          <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
-        `;
-
-        const byDay = {};
-        const byMonth = {};
-        contracts.forEach(c => {
-          byDay[c.date] = (byDay[c.date] || 0) + 1;
-          const month = c.date.slice(0,7);
-          byMonth[month] = (byMonth[month] || 0) + 1;
-        });
-
-        const bestDay = Object.entries(byDay).sort((a,b)=>b[1]-a[1])[0] || ['--',0];
-        const bestMonth = Object.entries(byMonth).sort((a,b)=>b[1]-a[1])[0] || ['--',0];
-
-        recordsKpis.innerHTML = `
-          <div class="kpi"><div class="kpi-label">Meilleur jour</div><div class="kpi-value">${bestDay[1]}</div><div class="kpi-sub">${bestDay[0] !== '--' ? formatDate(bestDay[0]) : '--'}</div></div>
-          <div class="kpi"><div class="kpi-label">Meilleur mois</div><div class="kpi-value">${bestMonth[1]}</div><div class="kpi-sub">${bestMonth[0] !== '--' ? getMonthLabel(bestMonth[0] + '-01') : '--'}</div></div>
-        `;
-
-        globalStats.innerHTML = '';
-        Object.entries(stats.byType).sort((a,b)=>b[1]-a[1]).forEach(([type, count]) => {
-          const bar = document.createElement('div');
-          bar.className = 'stat-bar';
-          const pct = stats.total > 0 ? (count / stats.total * 100) : 0;
-          bar.innerHTML = `
-            <div class="stat-bar-header"><div class="stat-bar-title">${type.replace(/_/g,' ')}</div><div class="stat-bar-value">${count}</div></div>
-            <div class="stat-bar-progress"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
-          `;
-          globalStats.appendChild(bar);
-        });
-      }
-
-      function renderAll() {
-        renderContractsList();
-        if (currentTab === 'jour') renderDay();
-        if (currentTab === 'semaine') renderWeek();
-        if (currentTab === 'mois') renderMonth();
-        if (currentTab === 'stats') renderStats();
-      }
-
-      // ========== Tabs ==========
-      tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const tab = btn.dataset.tab;
-          tabBtns.forEach(b => b.classList.remove('active'));
-          tabContents.forEach(c => c.classList.remove('active'));
-          btn.classList.add('active');
-          $(`#tab-${tab}`).classList.add('active');
-          currentTab = tab;
-          renderAll();
-        });
+        await saveContract(base);
+        const idx = contracts.findIndex(x=>x.id===base.id);
+        if (idx>=0) { contracts[idx]=base; showToast('✅ Contrat modifié', 'success'); }
+        else { contracts.push(base); showToast('✅ Contrat ajouté', 'success'); }
+        contracts.sort((a,b)=>b.date.localeCompare(a.date));
+        resetFormUI();
+        renderAll();
       });
 
-      // ========== Filters ==========
+      tabBtns.forEach(btn=>btn.addEventListener('click', ()=>{
+        const tab = btn.dataset.tab;
+        tabBtns.forEach(b=>b.classList.remove('active'));
+        tabContents.forEach(c=>c.classList.remove('active'));
+        btn.classList.add('active');
+        $(`#tab-${tab}`).classList.add('active');
+        currentTab = tab;
+        renderAll();
+      }));
+
       searchName.addEventListener('input', renderContractsList);
       filterProvider.addEventListener('change', renderContractsList);
       filterDate.addEventListener('change', renderContractsList);
@@ -2055,51 +1340,9 @@
       weekDate.addEventListener('change', renderWeek);
       monthDate.addEventListener('change', renderMonth);
 
-      monthlyGoal.addEventListener('change', () => {
-        const val = parseInt(monthlyGoal.value) || 0;
-        localStorage.setItem(STORAGE_KEYS.goal, val.toString());
+      monthlyGoal.addEventListener('change', ()=>{
+        localStorage.setItem(STORAGE_KEYS.goal, String(parseInt(monthlyGoal.value)||0));
         renderMonth();
-      });
-
-      // ========== Export handlers ==========
-      btnGenerateWeek.addEventListener('click', () => {
-        const d = exportWeekDate.value || todayStr();
-        const text = buildWeekExportText(d);
-        weekExportPreview.textContent = text;
-        showToast('Export semaine généré', 'success');
-      });
-
-      btnGenerateWeekCompact.addEventListener('click', () => {
-        const d = exportWeekDate.value || todayStr();
-        const text = buildWeekExportCompactText(d);
-        weekExportPreview.textContent = text;
-        showToast('Récap semaine généré', 'success');
-      });
-
-      btnGenerateMonth.addEventListener('click', () => {
-        const d = exportMonthDate.value || todayStr();
-        const text = buildMonthExportText(d);
-        monthExportPreview.textContent = text;
-        showToast('Export mois généré', 'success');
-      });
-
-      btnGenerateMonthCompact.addEventListener('click', () => {
-        const d = exportMonthDate.value || todayStr();
-        const text = buildMonthExportCompactText(d);
-        monthExportPreview.textContent = text;
-        showToast('Récap mois généré', 'success');
-      });
-
-      btnCopyWeek.addEventListener('click', () => {
-        const text = weekExportPreview.textContent || '';
-        if (!text.trim()) { showToast('Génère d\'abord un export semaine', 'warning'); return; }
-        copyToClipboard(text);
-      });
-
-      btnCopyMonth.addEventListener('click', () => {
-        const text = monthExportPreview.textContent || '';
-        if (!text.trim()) { showToast('Génère d\'abord un export mois', 'warning'); return; }
-        copyToClipboard(text);
       });
 
       function downloadText(filename, text, mime = 'text/plain') {
@@ -2114,63 +1357,32 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       }
 
-      btnExportJSON.addEventListener('click', () => {
-        const payload = {
-          version: 1,
-          exportedAt: new Date().toISOString(),
-          contracts,
-          goal: parseInt(monthlyGoal.value) || 0
-        };
+      btnExportJSON.addEventListener('click', ()=>{
+        const payload = { version: 1, exportedAt: new Date().toISOString(), contracts, goal: parseInt(monthlyGoal.value)||0 };
         downloadText(`remuneration_backup_${todayStr()}.json`, JSON.stringify(payload, null, 2), 'application/json');
-        localStorage.setItem(STORAGE_KEYS.lastBackup, new Date().toISOString());
         showToast('Backup JSON téléchargé', 'success');
       });
 
-      btnExportCSV.addEventListener('click', () => {
-        const rows = [
-          ['id','date','name','reference','provider','type','power','conso','axa','digitalisation','iagType','iagReference','amount']
-        ];
-        contracts.forEach(c => {
-          rows.push([
-            c.id,
-            c.date,
-            c.name,
-            c.reference,
-            c.provider,
-            c.type,
-            c.power ?? '',
-            c.conso ?? '',
-            c.axa ? 1 : 0,
-            c.digitalisation ? 1 : 0,
-            c.iagType ?? '',
-            c.iagReference ?? '',
-            calculateAmount(c)
-          ]);
-        });
-        downloadText(`remuneration_contracts_${todayStr()}.csv`, toCSV(rows), 'text/csv');
+      btnExportCSV.addEventListener('click', ()=>{
+        const rows = [['id','date','name','reference','provider','type','power','conso','axa','digitalisation','iagType','iagReference','amount']];
+        contracts.forEach(c=>rows.push([c.id,c.date,c.name,c.reference,c.provider,c.type,c.power??'',c.conso??'',c.axa?1:0,c.digitalisation?1:0,c.iagType??'',c.iagReference??'',calculateAmount(c)]));
+        const csv = rows.map(r=>r.map(v=>{
+          const s=String(v??'');
+          return /[";\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+        }).join(';')).join('\n');
+        downloadText(`remuneration_contracts_${todayStr()}.csv`, csv, 'text/csv');
         showToast('CSV téléchargé', 'success');
       });
 
-      btnImportJSON.addEventListener('click', () => {
-        importFile.value = '';
-        importFile.click();
-      });
-
-      importFile.addEventListener('change', async () => {
+      btnImportJSON.addEventListener('click', ()=>{ importFile.value=''; importFile.click(); });
+      importFile.addEventListener('change', async ()=>{
         const file = importFile.files && importFile.files[0];
         if (!file) return;
         try {
-          const txt = await file.text();
-          const data = JSON.parse(txt);
-          const importedContracts = sanitizeContracts(data.contracts || data);
-          await bulkReplaceContracts(importedContracts);
-          contracts = importedContracts;
+          const data = JSON.parse(await file.text());
+          contracts = sanitizeContracts(data.contracts || data);
           contracts.sort((a,b)=>b.date.localeCompare(a.date));
-          if (data.goal !== undefined) {
-            monthlyGoal.value = data.goal;
-            localStorage.setItem(STORAGE_KEYS.goal, String(data.goal));
-          }
-          resetFormUI();
+          if (data.goal !== undefined) { monthlyGoal.value = data.goal; localStorage.setItem(STORAGE_KEYS.goal, String(data.goal)); }
           renderAll();
           showToast('Import JSON terminé', 'success');
         } catch (err) {
@@ -2178,53 +1390,32 @@
         }
       });
 
-      btnClearAll.addEventListener('click', async () => {
-        if (!confirm('Tout effacer ? Cette action est irréversible.')) return;
-        await clearAllContracts();
-        contracts = [];
-        resetFormUI();
-        renderAll();
-        showToast('Toutes les données ont été effacées', 'warning');
-      });
-
-      // ========== Theme ==========
-      themeToggle.addEventListener('change', () => {
+      themeToggle.addEventListener('change', ()=>{
         const theme = themeToggle.value;
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem(STORAGE_KEYS.theme, theme);
         showToast('Thème appliqué', 'success');
       });
 
-      // ========== Init ==========
       async function init() {
         const today = todayStr();
         currentDateEl.textContent = formatDate(today);
-
         contractDate.value = today;
         dayDate.value = today;
         weekDate.value = today;
         monthDate.value = today;
-        exportWeekDate.value = today;
-        exportMonthDate.value = today;
 
         const savedTheme = localStorage.getItem(STORAGE_KEYS.theme) || 'auto';
         themeToggle.value = savedTheme;
         document.documentElement.setAttribute('data-theme', savedTheme);
-
         const savedGoal = localStorage.getItem(STORAGE_KEYS.goal);
         if (savedGoal) monthlyGoal.value = savedGoal;
 
-        try {
-          contracts = sanitizeContracts(await loadContracts());
-          contracts.sort((a, b) => b.date.localeCompare(a.date));
-        } catch (err) {
-          console.error('Error loading contracts:', err);
-          contracts = [];
-        }
+        contracts = sanitizeContracts(await loadContracts());
+        contracts.sort((a,b)=>b.date.localeCompare(a.date));
 
         updateFormFields();
         renderAll();
-
         showToast('✅ Application chargée', 'success');
       }
 
