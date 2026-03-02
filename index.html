@@ -719,7 +719,7 @@
               <input type="text" id="contractName" placeholder="Ex: DUPONT" required maxlength="80">
             </div>
             <div class="form-group">
-              <label for="contractRef">Référence *</label>
+              <label for="contractRef" id="contractRefLabel">Référence *</label>
               <input type="text" id="contractRef" placeholder="Ex: A-12345678, VTCO12345678, 406XXXXX" required maxlength="50">
             </div>
           </div>
@@ -773,7 +773,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" id="iagRefGroup">
             <label for="contractIagRef">Référence IAG</label>
             <input type="text" id="contractIagRef" placeholder="Ex: 406XXXXX / A-12345678" maxlength="50">
           </div>
@@ -827,6 +827,7 @@
           </div>
         </div>
         <div id="dayKpis" class="kpi-grid"></div>
+        <div id="dayComparison" style="margin-top:12px;"></div>
         <div id="dayNote" style="margin-top:16px; font-size:13px; color:var(--muted);"></div>
       </div>
 
@@ -858,6 +859,7 @@
           </div>
         </div>
         <div id="weekKpis" class="kpi-grid"></div>
+        <div id="weekComparison" style="margin-top:12px;"></div>
       </div>
 
       <div class="card">
@@ -1086,6 +1088,7 @@
       const contractDate = $('#contractDate');
       const contractName = $('#contractName');
       const contractRef = $('#contractRef');
+      const contractRefLabel = $('#contractRefLabel');
       const contractProvider = $('#contractProvider');
       const contractType = $('#contractType');
       const contractPower = $('#contractPower');
@@ -1101,6 +1104,7 @@
       const consoGroup = $('#consoGroup');
       const optionsGroup = $('#optionsGroup');
       const iagGroup = $('#iagGroup');
+      const iagRefGroup = $('#iagRefGroup');
 
       // Filters
       const searchName = $('#searchName');
@@ -1114,6 +1118,7 @@
       // Day
       const dayDate = $('#dayDate');
       const dayKpis = $('#dayKpis');
+      const dayComparison = $('#dayComparison');
       const dayNote = $('#dayNote');
       const dayContractsList = $('#dayContractsList');
       const dayContractsEmpty = $('#dayContractsEmpty');
@@ -1123,6 +1128,7 @@
       const weekRange = $('#weekRange');
       const weekNumber = $('#weekNumber');
       const weekKpis = $('#weekKpis');
+      const weekComparison = $('#weekComparison');
       const weekStats = $('#weekStats');
       const weekContractsList = $('#weekContractsList');
       const weekContractsEmpty = $('#weekContractsEmpty');
@@ -1166,6 +1172,12 @@
         return d.toISOString().slice(0, 10);
       }
 
+      function addDays(dateStr, deltaDays) {
+        const d = new Date(dateStr + 'T00:00:00');
+        d.setDate(d.getDate() + deltaDays);
+        return d.toISOString().slice(0, 10);
+      }
+
       function formatDate(dateStr) {
         const [y, m, d] = dateStr.split('-');
         return `${d}/${m}/${y}`;
@@ -1173,6 +1185,17 @@
 
       function formatEuro(amount) {
         return amount.toFixed(2).replace('.', ',') + ' €';
+      }
+
+      function formatSignedNumber(n) {
+        if (n > 0) return `+${n}`;
+        return `${n}`;
+      }
+
+      function formatSignedEuro(delta) {
+        if (delta === 0) return formatEuro(0);
+        const sign = delta > 0 ? '+' : '-';
+        return sign + formatEuro(Math.abs(delta));
       }
 
       function getWeekNumber(d) {
@@ -1240,6 +1263,20 @@
           if (!out.type) out.type = 'ELEC_6';
           if (String(out.type).startsWith('IAG_')) out.provider = 'PLENITUDE';
           if (out.type !== 'DUAL') { out.power = null; out.conso = null; }
+
+          const isPrimeo = out.provider === 'PRIMEO' || String(out.type).startsWith('PRIMEO_');
+          if (isPrimeo) {
+            out.axa = false;
+            out.digitalisation = false;
+          }
+
+          if (String(out.type).startsWith('IAG_')) {
+            out.axa = false;
+            out.digitalisation = false;
+            out.iagType = null;
+            out.iagReference = null;
+          }
+
           return out;
         });
       }
@@ -1353,8 +1390,11 @@
           amount = TARIFS[contract.type] || 0;
         }
 
-        if (contract.axa) amount += TARIFS.AXA;
-        if (contract.digitalisation) amount += TARIFS.DIGI;
+        const allowOptions = contract.provider === 'PLENITUDE';
+        if (allowOptions) {
+          if (contract.axa) amount += TARIFS.AXA;
+          if (contract.digitalisation) amount += TARIFS.DIGI;
+        }
         return amount;
       }
 
@@ -1544,7 +1584,7 @@
       function toCSV(rows) {
         const esc = (v) => {
           const s = String(v ?? '');
-          if (/[";\n\r]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+          if (/[\";\n\r]/.test(s)) return '\"' + s.replace(/\"/g,'\"\"') + '\"';
           return s;
         };
         return rows.map(r => r.map(esc).join(';')).join('\n');
@@ -1636,6 +1676,10 @@
         consoGroup.style.display = 'none';
         optionsGroup.style.display = 'none';
         iagGroup.style.display = 'none';
+        iagRefGroup.style.display = '';
+
+        contractRefLabel.textContent = 'Référence *';
+        contractRef.placeholder = 'Ex: A-12345678, VTCO12345678, 406XXXXX';
 
         if (!provider) {
           populateTypeOptions('');
@@ -1649,19 +1693,51 @@
 
         if (!type) return;
 
+        const isIagOnly = String(type).startsWith('IAG_');
+        const isPlenitude = provider === 'PLENITUDE';
+
+        if (isIagOnly) {
+          // IAG seul : la référence principale est la référence IAG, on masque le champ "Référence IAG".
+          iagRefGroup.style.display = 'none';
+          contractIagType.value = '';
+          contractIagRef.value = '';
+          contractAxa.checked = false;
+          contractDigi.checked = false;
+          contractRefLabel.textContent = 'Référence IAG *';
+          contractRef.placeholder = 'Ex: 406XXXXX / A-12345678';
+          return;
+        }
+
+        const showEnergyOptions = isPlenitude && (type === 'DUAL' || ['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12'].includes(type));
+
         if (type === 'DUAL') {
           powerGroup.style.display = '';
           consoGroup.style.display = '';
-          optionsGroup.style.display = '';
+
+          if (showEnergyOptions) {
+            optionsGroup.style.display = '';
+          }
 
           contractPower.innerHTML = DUAL_POWER.map(p => `<option value="${p}">${p} kVA</option>`).join('');
           contractConso.innerHTML = DUAL_CONSO.map(c => `<option value="${c}">${c} MWh</option>`).join('');
         } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12', 'PRIMEO_ELEC_6', 'PRIMEO_ELEC_9', 'PRIMEO_ELEC_12'].includes(type)) {
-          optionsGroup.style.display = '';
+          // Options AXA + Digi uniquement pour Plenitude
+          if (showEnergyOptions) {
+            optionsGroup.style.display = '';
+          } else {
+            contractAxa.checked = false;
+            contractDigi.checked = false;
+          }
         }
 
         if (!String(type).startsWith('IAG_')) {
           iagGroup.style.display = '';
+        }
+
+        if (!isPlenitude) {
+          // Primeo : pas d'options AXA / Digi
+          contractAxa.checked = false;
+          contractDigi.checked = false;
         }
       }
 
@@ -1720,6 +1796,8 @@
           iagReference: null
         };
 
+        const isPlenitude = provider === 'PLENITUDE';
+
         if (type === 'DUAL') {
           base.power = contractPower.value;
           base.conso = contractConso.value;
@@ -1727,11 +1805,19 @@
             showError('Veuillez sélectionner la puissance et la consommation.');
             return;
           }
-          base.axa = contractAxa.checked;
-          base.digitalisation = contractDigi.checked;
-        } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12', 'PRIMEO_ELEC_6', 'PRIMEO_ELEC_9', 'PRIMEO_ELEC_12'].includes(type)) {
-          base.axa = contractAxa.checked;
-          base.digitalisation = contractDigi.checked;
+          if (isPlenitude) {
+            base.axa = contractAxa.checked;
+            base.digitalisation = contractDigi.checked;
+          }
+        } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12'].includes(type)) {
+          if (isPlenitude) {
+            base.axa = contractAxa.checked;
+            base.digitalisation = contractDigi.checked;
+          }
+        } else {
+          // Primeo et tout autre type : pas d'options AXA/Digi
+          base.axa = false;
+          base.digitalisation = false;
         }
 
         if (!String(type).startsWith('IAG_') && iagTypeSelected && !iagReferenceInput) {
@@ -1746,6 +1832,15 @@
 
         if (String(type).startsWith('IAG_')) {
           base.provider = 'PLENITUDE';
+          base.axa = false;
+          base.digitalisation = false;
+          base.iagType = null;
+          base.iagReference = null;
+        }
+
+        if (base.provider === 'PRIMEO') {
+          base.axa = false;
+          base.digitalisation = false;
         }
 
         try {
@@ -1884,6 +1979,21 @@
           <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
         `;
 
+        const prevDate = addDays(date, -1);
+        const prevContracts = contracts.filter(c => c.date === prevDate);
+        const prevStats = computeStats(prevContracts);
+        dayComparison.innerHTML = `
+          <div class="stat-bar">
+            <div class="stat-bar-header">
+              <div class="stat-bar-title">Comparaison avec la veille (${formatDate(prevDate)})</div>
+              <div class="stat-bar-value">${formatSignedNumber(stats.total - prevStats.total)}</div>
+            </div>
+            <div style="font-size:12px; color:var(--muted); line-height:1.5;">
+              Δ Énergie: ${formatSignedNumber(stats.energy - prevStats.energy)} • Δ IAG: ${formatSignedNumber(stats.iag - prevStats.iag)} • Δ € Énergie: ${formatSignedEuro(stats.energyAmount - prevStats.energyAmount)} • Δ € IAG: ${formatSignedEuro(stats.iagAmount - prevStats.iagAmount)} • Δ € Total: ${formatSignedEuro(stats.totalAmount - prevStats.totalAmount)}
+            </div>
+          </div>
+        `;
+
         dayNote.textContent = `Date analysée : ${formatDate(date)}`;
 
         if (dayContracts.length === 0) {
@@ -1914,6 +2024,21 @@
           <div class="kpi"><div class="kpi-label">€ Énergie</div><div class="kpi-value">${formatEuro(stats.energyAmount)}</div></div>
           <div class="kpi"><div class="kpi-label">€ IAG</div><div class="kpi-value">${formatEuro(stats.iagAmount)}</div><div class="kpi-sub">Tarif: ${formatEuro(getIAGTarif(stats.iag))}</div></div>
           <div class="kpi"><div class="kpi-label">€ Total</div><div class="kpi-value">${formatEuro(stats.totalAmount)}</div></div>
+        `;
+
+        const prevWeek = getWeekRange(addDays(date, -7));
+        const prevWeekContracts = getContractsByPeriod(contracts, prevWeek.start, prevWeek.end);
+        const prevStats = computeStats(prevWeekContracts);
+        weekComparison.innerHTML = `
+          <div class="stat-bar">
+            <div class="stat-bar-header">
+              <div class="stat-bar-title">Comparaison avec semaine précédente (S${prevWeek.week} : ${formatDate(prevWeek.start)} → ${formatDate(prevWeek.end)})</div>
+              <div class="stat-bar-value">${formatSignedNumber(stats.total - prevStats.total)}</div>
+            </div>
+            <div style="font-size:12px; color:var(--muted); line-height:1.5;">
+              Δ Énergie: ${formatSignedNumber(stats.energy - prevStats.energy)} • Δ IAG: ${formatSignedNumber(stats.iag - prevStats.iag)} • Δ € Énergie: ${formatSignedEuro(stats.energyAmount - prevStats.energyAmount)} • Δ € IAG: ${formatSignedEuro(stats.iagAmount - prevStats.iagAmount)} • Δ € Total: ${formatSignedEuro(stats.totalAmount - prevStats.totalAmount)}
+            </div>
+          </div>
         `;
 
         weekStats.innerHTML = '';
