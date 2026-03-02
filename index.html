@@ -725,6 +725,17 @@
           </div>
 
           <div class="form-row">
+            <div class="form-group">
+              <div class="check-row">
+                <label>
+                  <input type="checkbox" id="contractIagOnly">
+                  IAG seul (sans contrat d'énergie)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" id="energyRow">
             <div class="form-group sm">
               <label for="contractProvider">Fournisseur *</label>
               <select id="contractProvider" required>
@@ -764,9 +775,9 @@
 
           <div class="form-row" id="iagGroup" style="display:none;">
             <div class="form-group sm">
-              <label for="contractIagType">Type IAG</label>
+              <label for="contractIagType">Type IAG *</label>
               <select id="contractIagType">
-                <option value="">Aucun</option>
+                <option value="">-- Choisir --</option>
                 <option value="PJI">PJI</option>
                 <option value="ELA">ELA</option>
               </select>
@@ -774,7 +785,7 @@
           </div>
 
           <div class="form-group" id="iagRefGroup">
-            <label for="contractIagRef">Référence IAG</label>
+            <label for="contractIagRef">Référence IAG *</label>
             <input type="text" id="contractIagRef" placeholder="Ex: 406XXXXX / A-12345678" maxlength="50">
           </div>
 
@@ -1011,10 +1022,6 @@
             { value: 'ELEC_9', label: 'Électricité 9 kVA', requiresPower: false, requiresConso: false },
             { value: 'ELEC_12', label: 'Électricité 12 kVA', requiresPower: false, requiresConso: false },
             { value: 'DUAL', label: 'Dual Énergie', requiresPower: true, requiresConso: true }
-          ],
-          IAG: [
-            { value: 'IAG_PJI', label: 'IAG - PJI', requiresPower: false, requiresConso: false },
-            { value: 'IAG_ELA', label: 'IAG - ELA', requiresPower: false, requiresConso: false }
           ]
         },
         PRIMEO: {
@@ -1022,8 +1029,7 @@
             { value: 'PRIMEO_ELEC_6', label: 'Primeo Électricité 6 kVA', requiresPower: false, requiresConso: false },
             { value: 'PRIMEO_ELEC_9', label: 'Primeo Électricité 9 kVA', requiresPower: false, requiresConso: false },
             { value: 'PRIMEO_ELEC_12', label: 'Primeo Électricité 12 kVA', requiresPower: false, requiresConso: false }
-          ],
-          IAG: []
+          ]
         }
       };
 
@@ -1089,6 +1095,8 @@
       const contractName = $('#contractName');
       const contractRef = $('#contractRef');
       const contractRefLabel = $('#contractRefLabel');
+      const contractIagOnly = $('#contractIagOnly');
+      const energyRow = $('#energyRow');
       const contractProvider = $('#contractProvider');
       const contractType = $('#contractType');
       const contractPower = $('#contractPower');
@@ -1259,22 +1267,42 @@
           if (!out.id) out.id = Date.now() + '_' + Math.random().toString(36).slice(2);
           if (!out.date) out.date = todayStr();
           if (!out.name) out.name = 'SANS_NOM';
-          if (!out.provider) out.provider = 'PLENITUDE';
-          if (!out.type) out.type = 'ELEC_6';
-          if (String(out.type).startsWith('IAG_')) out.provider = 'PLENITUDE';
-          if (out.type !== 'DUAL') { out.power = null; out.conso = null; }
 
-          const isPrimeo = out.provider === 'PRIMEO' || String(out.type).startsWith('PRIMEO_');
-          if (isPrimeo) {
+          // Migration anciens IAG stockés en tant que "type".
+          if (String(out.type || '').startsWith('IAG_')) {
+            const suffix = String(out.type).split('_')[1] || '';
+            out.provider = 'IAG';
+            out.type = null;
+            out.power = null;
+            out.conso = null;
+            out.axa = false;
+            out.digitalisation = false;
+            out.iagType = (suffix === 'PJI' || suffix === 'ELA') ? suffix : (out.iagType || null);
+            out.iagReference = out.reference || out.iagReference || null;
+          }
+
+          // Defaults
+          if (out.provider === undefined || out.provider === null || out.provider === '') {
+            out.provider = out.type ? 'PLENITUDE' : (out.iagType ? 'IAG' : 'PLENITUDE');
+          }
+          if (out.type === undefined) out.type = out.type || null;
+          if (out.power === undefined) out.power = null;
+          if (out.conso === undefined) out.conso = null;
+          if (out.iagType === undefined) out.iagType = null;
+          if (out.iagReference === undefined) out.iagReference = null;
+
+          // Nettoyage si pas d'énergie
+          if (!out.type) {
+            out.power = null;
+            out.conso = null;
             out.axa = false;
             out.digitalisation = false;
           }
 
-          if (String(out.type).startsWith('IAG_')) {
+          const isPrimeo = out.provider === 'PRIMEO' || String(out.type || '').startsWith('PRIMEO_');
+          if (isPrimeo) {
             out.axa = false;
             out.digitalisation = false;
-            out.iagType = null;
-            out.iagReference = null;
           }
 
           return out;
@@ -1379,7 +1407,7 @@
       // ========== Business Logic ==========
       function calculateAmount(contract) {
         let amount = 0;
-        if (String(contract.type).startsWith('IAG_')) return 0;
+        if (!contract.type) return 0;
 
         if (String(contract.type).startsWith('PRIMEO_')) {
           amount = TARIFS[contract.type] || 0;
@@ -1412,17 +1440,21 @@
         };
 
         contractsSubset.forEach(c => {
-          const hasIag = String(c.type).startsWith('IAG_') || !!c.iagType;
+          const isEnergy = !!c.type;
+          const hasIag = !!c.iagType;
+
           if (hasIag) stats.iag++;
-          if (!String(c.type).startsWith('IAG_')) stats.energy++;
+          if (isEnergy) stats.energy++;
 
           if (c.provider === 'PLENITUDE') stats.plenitude++;
           if (c.provider === 'PRIMEO') stats.primeo++;
 
-          const typeKey = c.type + (c.type === 'DUAL' ? `_${c.power}_${c.conso}` : '');
+          const typeKey = isEnergy
+            ? (c.type + (c.type === 'DUAL' ? `_${c.power}_${c.conso}` : ''))
+            : (hasIag ? `IAG_ONLY_${c.iagType}` : 'SANS_TYPE');
           stats.byType[typeKey] = (stats.byType[typeKey] || 0) + 1;
 
-          stats.energyAmount += calculateAmount(c);
+          if (isEnergy) stats.energyAmount += calculateAmount(c);
         });
 
         const iagTarif = getIAGTarif(stats.iag);
@@ -1432,10 +1464,10 @@
       }
 
       function contractTypeLabel(c) {
-        if (String(c.type).startsWith('IAG_')) return `IAG ${String(c.type).split('_')[1]}`;
+        if (!c.type && c.iagType) return `IAG seul - ${c.iagType}`;
         if (c.type === 'DUAL') return `Dual ${c.power}/${c.conso}`;
-        if (String(c.type).startsWith('PRIMEO_')) return c.type.replace(/PRIMEO_/, 'Primeo ').replace(/_/g, ' ');
-        return String(c.type).replace(/_/g, ' ');
+        if (String(c.type || '').startsWith('PRIMEO_')) return String(c.type).replace(/PRIMEO_/, 'Primeo ').replace(/_/g, ' ');
+        return String(c.type || '').replace(/_/g, ' ');
       }
 
       function filterContracts(list, filters) {
@@ -1617,8 +1649,24 @@
       function fillFormFromContract(c) {
         contractDate.value = c.date;
         contractName.value = c.name || '';
-        contractRef.value = c.reference || '';
 
+        const isIagOnly = !c.type && !!c.iagType;
+        contractIagOnly.checked = isIagOnly;
+
+        if (isIagOnly) {
+          contractRef.value = c.iagReference || c.reference || '';
+          contractProvider.value = '';
+          contractType.dataset.provider = '';
+          contractType.value = '';
+          contractIagType.value = c.iagType || '';
+          contractIagRef.value = '';
+          contractAxa.checked = false;
+          contractDigi.checked = false;
+          updateFormFields();
+          return;
+        }
+
+        contractRef.value = c.reference || '';
         contractProvider.value = c.provider || '';
         contractType.dataset.provider = '';
         updateFormFields();
@@ -1654,21 +1702,10 @@
           energyGroup.appendChild(opt);
         });
         contractType.appendChild(energyGroup);
-
-        if (types.IAG && types.IAG.length) {
-          const iagOptGroup = document.createElement('optgroup');
-          iagOptGroup.label = 'IAG';
-          types.IAG.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t.value;
-            opt.textContent = t.label;
-            iagOptGroup.appendChild(opt);
-          });
-          contractType.appendChild(iagOptGroup);
-        }
       }
 
       function updateFormFields() {
+        const iagOnly = !!contractIagOnly.checked;
         const provider = contractProvider.value;
         const type = contractType.value;
 
@@ -1681,6 +1718,30 @@
         contractRefLabel.textContent = 'Référence *';
         contractRef.placeholder = 'Ex: A-12345678, VTCO12345678, 406XXXXX';
 
+        if (iagOnly) {
+          energyRow.style.display = 'none';
+          contractProvider.required = false;
+          contractType.required = false;
+
+          contractProvider.value = '';
+          contractType.value = '';
+          contractType.dataset.provider = '';
+
+          contractAxa.checked = false;
+          contractDigi.checked = false;
+
+          iagGroup.style.display = '';
+          iagRefGroup.style.display = 'none';
+
+          contractRefLabel.textContent = 'Référence IAG *';
+          contractRef.placeholder = 'Ex: 406XXXXX / A-12345678';
+          return;
+        }
+
+        energyRow.style.display = '';
+        contractProvider.required = true;
+        contractType.required = true;
+
         if (!provider) {
           populateTypeOptions('');
           return;
@@ -1691,22 +1752,12 @@
           contractType.dataset.provider = provider;
         }
 
-        if (!type) return;
-
-        const isIagOnly = String(type).startsWith('IAG_');
-        const isPlenitude = provider === 'PLENITUDE';
-
-        if (isIagOnly) {
-          // IAG seul : la référence principale est la référence IAG, on masque le champ "Référence IAG".
-          iagRefGroup.style.display = 'none';
-          contractIagType.value = '';
-          contractIagRef.value = '';
-          contractAxa.checked = false;
-          contractDigi.checked = false;
-          contractRefLabel.textContent = 'Référence IAG *';
-          contractRef.placeholder = 'Ex: 406XXXXX / A-12345678';
+        if (!type) {
+          iagGroup.style.display = 'none';
           return;
         }
+
+        const isPlenitude = provider === 'PLENITUDE';
 
         const showEnergyOptions = isPlenitude && (type === 'DUAL' || ['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12'].includes(type));
 
@@ -1721,7 +1772,6 @@
           contractPower.innerHTML = DUAL_POWER.map(p => `<option value="${p}">${p} kVA</option>`).join('');
           contractConso.innerHTML = DUAL_CONSO.map(c => `<option value="${c}">${c} MWh</option>`).join('');
         } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12', 'PRIMEO_ELEC_6', 'PRIMEO_ELEC_9', 'PRIMEO_ELEC_12'].includes(type)) {
-          // Options AXA + Digi uniquement pour Plenitude
           if (showEnergyOptions) {
             optionsGroup.style.display = '';
           } else {
@@ -1730,16 +1780,18 @@
           }
         }
 
-        if (!String(type).startsWith('IAG_')) {
-          iagGroup.style.display = '';
-        }
+        // IAG : option dès qu'un contrat énergie est choisi
+        iagGroup.style.display = '';
 
         if (!isPlenitude) {
-          // Primeo : pas d'options AXA / Digi
           contractAxa.checked = false;
           contractDigi.checked = false;
         }
       }
+
+      contractIagOnly.addEventListener('change', () => {
+        updateFormFields();
+      });
 
       contractProvider.addEventListener('change', () => {
         contractType.dataset.provider = '';
@@ -1750,6 +1802,7 @@
       function resetFormUI() {
         addContractForm.reset();
         contractDate.value = todayStr();
+        contractIagOnly.checked = false;
         contractType.dataset.provider = '';
         updateFormFields();
         clearError();
@@ -1763,6 +1816,8 @@
         e.preventDefault();
         clearError();
 
+        const iagOnly = !!contractIagOnly.checked;
+
         const date = contractDate.value.trim();
         const name = contractName.value.trim().toUpperCase();
         const reference = contractRef.value.trim();
@@ -1771,8 +1826,18 @@
         const iagTypeSelected = contractIagType.value;
         const iagReferenceInput = contractIagRef.value.trim();
 
-        if (!date || !name || !reference || !provider || !type) {
+        if (!date || !name || !reference) {
           showError('Tous les champs obligatoires (*) doivent être remplis.');
+          return;
+        }
+
+        if (!iagOnly && (!provider || !type)) {
+          showError('Veuillez sélectionner le fournisseur et le type énergie.');
+          return;
+        }
+
+        if (iagOnly && !iagTypeSelected) {
+          showError('Veuillez sélectionner le type IAG (PJI ou ELA).');
           return;
         }
 
@@ -1786,8 +1851,8 @@
           date,
           name,
           reference,
-          provider,
-          type,
+          provider: iagOnly ? 'IAG' : provider,
+          type: iagOnly ? null : type,
           power: null,
           conso: null,
           axa: false,
@@ -1796,51 +1861,51 @@
           iagReference: null
         };
 
-        const isPlenitude = provider === 'PLENITUDE';
+        if (!iagOnly) {
+          const isPlenitude = provider === 'PLENITUDE';
 
-        if (type === 'DUAL') {
-          base.power = contractPower.value;
-          base.conso = contractConso.value;
-          if (!base.power || !base.conso) {
-            showError('Veuillez sélectionner la puissance et la consommation.');
+          if (type === 'DUAL') {
+            base.power = contractPower.value;
+            base.conso = contractConso.value;
+            if (!base.power || !base.conso) {
+              showError('Veuillez sélectionner la puissance et la consommation.');
+              return;
+            }
+            if (isPlenitude) {
+              base.axa = contractAxa.checked;
+              base.digitalisation = contractDigi.checked;
+            }
+          } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12'].includes(type)) {
+            if (isPlenitude) {
+              base.axa = contractAxa.checked;
+              base.digitalisation = contractDigi.checked;
+            }
+          } else {
+            base.axa = false;
+            base.digitalisation = false;
+          }
+
+          if (iagTypeSelected && !iagReferenceInput) {
+            showError('Veuillez saisir la référence IAG.');
             return;
           }
-          if (isPlenitude) {
-            base.axa = contractAxa.checked;
-            base.digitalisation = contractDigi.checked;
+
+          if (iagTypeSelected) {
+            base.iagType = iagTypeSelected;
+            base.iagReference = iagReferenceInput ? iagReferenceInput : null;
           }
-        } else if (['ELEC_3', 'ELEC_6', 'ELEC_9', 'ELEC_12'].includes(type)) {
-          if (isPlenitude) {
-            base.axa = contractAxa.checked;
-            base.digitalisation = contractDigi.checked;
+
+          if (base.provider === 'PRIMEO') {
+            base.axa = false;
+            base.digitalisation = false;
           }
         } else {
-          // Primeo et tout autre type : pas d'options AXA/Digi
-          base.axa = false;
-          base.digitalisation = false;
-        }
-
-        if (!String(type).startsWith('IAG_') && iagTypeSelected && !iagReferenceInput) {
-          showError('Veuillez saisir la référence IAG.');
-          return;
-        }
-
-        if (!String(type).startsWith('IAG_') && iagTypeSelected) {
           base.iagType = iagTypeSelected;
-          base.iagReference = iagReferenceInput ? iagReferenceInput : null;
-        }
-
-        if (String(type).startsWith('IAG_')) {
-          base.provider = 'PLENITUDE';
+          base.iagReference = reference;
           base.axa = false;
           base.digitalisation = false;
-          base.iagType = null;
-          base.iagReference = null;
-        }
-
-        if (base.provider === 'PRIMEO') {
-          base.axa = false;
-          base.digitalisation = false;
+          base.power = null;
+          base.conso = null;
         }
 
         try {
@@ -1895,8 +1960,9 @@
         actions.className = 'list-item-actions';
 
         const badge = document.createElement('span');
-        badge.className = `badge badge-${String(contract.provider).toLowerCase()}`;
-        badge.textContent = contract.provider;
+        const providerText = contract.provider || 'IAG';
+        badge.className = `badge badge-${String(providerText).toLowerCase()}`;
+        badge.textContent = providerText;
 
         const amount = document.createElement('div');
         amount.className = 'amount';
@@ -2262,7 +2328,7 @@
             c.name,
             c.reference,
             c.provider,
-            c.type,
+            c.type ?? '',
             c.power ?? '',
             c.conso ?? '',
             c.axa ? 1 : 0,
