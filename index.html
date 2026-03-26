@@ -1428,7 +1428,7 @@
 
       function computeStats(contractsSubset) {
         const stats = {
-          total: contractsSubset.length,
+          total: 0,
           energy: 0,
           iag: 0,
           plenitude: 0,
@@ -1443,8 +1443,8 @@
           const isEnergy = !!c.type;
           const hasIag = !!c.iagType;
 
-          if (hasIag) stats.iag++;
-          if (isEnergy) stats.energy++;
+          if (isEnergy) { stats.energy++; stats.total++; }
+          if (hasIag) { stats.iag++; stats.total++; }
 
           if (c.provider === 'PLENITUDE') stats.plenitude++;
           if (c.provider === 'PRIMEO') stats.primeo++;
@@ -1616,7 +1616,7 @@
       function toCSV(rows) {
         const esc = (v) => {
           const s = String(v ?? '');
-          if (/[\";\n\r]/.test(s)) return '\"' + s.replace(/\"/g,'\"\"') + '\"';
+          if (/[\";\\n\\r]/.test(s)) return '\"' + s.replace(/\"/g,'\"\"') + '\"';
           return s;
         };
         return rows.map(r => r.map(esc).join(';')).join('\n');
