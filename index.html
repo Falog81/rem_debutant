@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="auto">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Débutant - Gestion Contrats</title>
+  <meta name="description" content="Suivi de contrats et calcul de rémunération (Plenitude / Primeo / IAG). Application installable, fonctionne hors-ligne.">
+  <meta name="theme-color" content="#0b0c10">
+  <meta name="color-scheme" content="dark light">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Rémunération">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>📊 Débutant</h1>
+      <div class="header-actions">
+        <div class="pill">
+          <span>Date</span>
+          <strong id="currentDate">--</strong>
+        </div>
+        <span id="offlineBadge" class="pill" style="display:none; color:var(--warn); border-color:var(--warn); font-weight:700;">⚡ Hors-ligne</span>
+        <button type="button" id="btnInstall" class="btn-sm btn-ghost" style="display:none;">⬇️ Installer</button>
+        <select id="themeToggle" class="btn-sm">
+          <option value="auto">🌓 Auto</option>
+          <option value="dark">🌙 Sombre</option>
+          <option value="light">☀️ Clair</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Tabs Navigation -->
+  <nav class="tabs-nav">
+    <div class="tabs-list">
+      <button class="tab-btn active" data-tab="contrats">📝 Contrats</button>
+      <button class="tab-btn" data-tab="jour">📅 Jour</button>
+      <button class="tab-btn" data-tab="semaine">📊 Semaine</button>
+      <button class="tab-btn" data-tab="mois">📈 Mois</button>
+      <button class="tab-btn" data-tab="annee">📆 Année</button>
+      <button class="tab-btn" data-tab="stats">📉 Statistiques</button>
+      <button class="tab-btn" data-tab="export">💾 Export</button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container">
+    <!-- Tab Contrats -->
+    <div id="tab-contrats" class="tab-content active">
+      <div class="card">
+        <h2 id="formTitle">➕ Ajouter un contrat</h2>
+        <form id="addContractForm">
+          <div class="form-row">
+            <div class="form-group sm">
+              <label for="contractDate">Date *</label>
+              <input type="date" id="contractDate" required>
+            </div>
+            <div class="form-group">
+              <label for="contractName">Nom Client *</label>
+              <input type="text" id="contractName" placeholder="Ex: DUPONT" required maxlength="80">
+            </div>
+            <div class="form-group">
+              <label for="contractRef" id="contractRefLabel">Référence *</label>
+              <input type="text" id="contractRef" placeholder="Ex: A-12345678, VTCO12345678, 406XXXXX" required maxlength="50">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <div class="check-row">
+                <label>
+                  <input type="checkbox" id="contractIagOnly">
+                  Assurance seule (sans contrat d'énergie)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row" id="energyRow">
+            <div class="form-group sm">
+              <label for="contractProvider">Fournisseur *</label>
+              <select id="contractProvider" required>
+                <option value="">-- Choisir --</option>
+                <option value="PLENITUDE">Plenitude</option>
+                <option value="PRIMEO">Primeo</option>
+              </select>
+            </div>
+            <div class="form-group sm">
+              <label for="contractType">Type *</label>
+              <select id="contractType" required>
+                <option value="">-- Choisir --</option>
+              </select>
+            </div>
+            <div class="form-group sm" id="powerGroup" style="display:none;">
+              <label for="contractPower">Puissance *</label>
+              <select id="contractPower"></select>
+            </div>
+            <div class="form-group sm" id="consoGroup" style="display:none;">
+              <label for="contractConso">Consommation *</label>
+              <select id="contractConso"></select>
+            </div>
+          </div>
+
+          <div id="optionsGroup" style="display:none;">
+            <div class="check-row">
+              <label>
+                <input type="checkbox" id="contractAxa">
+                Plenicoach Dépannage Premium (+5€)
+              </label>
+              <label>
+                <input type="checkbox" id="contractDigi">
+                Digitalisation (+1,5€)
+              </label>
+            </div>
+          </div>
+
+          <div id="iagGroup" style="display:none;">
+            <div class="check-row">
+              <label>
+                <input type="checkbox" id="contractAssurance">
+                Assurance
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" id="iagRefGroup">
+            <label for="contractIagRef">Référence Assurance *</label>
+            <input type="text" id="contractIagRef" placeholder="Ex: 406XXXXX / A-12345678" maxlength="50">
+          </div>
+
+          <div id="cancelGroup" style="display:none;">
+            <label style="display:block; margin-bottom:6px;">Annulation</label>
+            <div class="check-row">
+              <label id="cancelEnergyLabel" style="display:none;">
+                <input type="checkbox" id="contractEnergyCancelled">
+                🚫 Énergie annulée
+              </label>
+              <label id="cancelIagLabel" style="display:none;">
+                <input type="checkbox" id="contractIagCancelled">
+                🚫 Assurance annulée
+              </label>
+            </div>
+          </div>
+
+          <div class="alert alert-error" id="formError"></div>
+
+          <div class="btn-row">
+            <button type="submit" class="btn-primary" id="btnSubmitContract">➕ Ajouter le contrat</button>
+            <button type="button" class="btn-ghost" id="btnClearForm">🔄 Réinitialiser</button>
+            <button type="button" class="btn-danger" id="btnCancelEdit" style="display:none;">✖ Annuler édition</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>📋 Liste des contrats</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="searchName">🔍 Recherche (nom ou référence)</label>
+            <input type="text" id="searchName" placeholder="Rechercher...">
+          </div>
+          <div class="form-group sm">
+            <label for="filterProvider">Fournisseur</label>
+            <select id="filterProvider">
+              <option value="">Tous</option>
+              <option value="PLENITUDE">Plenitude</option>
+              <option value="PRIMEO">Primeo</option>
+            </select>
+          </div>
+          <div class="form-group sm">
+            <label for="filterDate">Date</label>
+            <input type="date" id="filterDate">
+          </div>
+          <div class="form-group sm">
+            <label for="filterType">Type</label>
+            <select id="filterType">
+              <option value="">Tous</option>
+              <option value="ELEC">Électricité</option>
+              <option value="GAZ">Gaz</option>
+              <option value="DUAL">Dual</option>
+              <option value="PRIMEO">Primeo</option>
+              <option value="ASSURANCE">Assurance</option>
+              <option value="CANCELLED">🚫 Annulés</option>
+            </select>
+          </div>
+          <div class="form-group sm">
+            <label for="sortBy">Trier par</label>
+            <select id="sortBy">
+              <option value="date_desc">Date (récent → ancien)</option>
+              <option value="date_asc">Date (ancien → récent)</option>
+              <option value="name_asc">Nom (A → Z)</option>
+              <option value="amount_desc">Montant (élevé → bas)</option>
+              <option value="amount_asc">Montant (bas → élevé)</option>
+            </select>
+          </div>
+        </div>
+        <div id="contractsCount" style="font-size:13px; color:var(--muted); margin-bottom:10px;"></div>
+        <div id="contractsList" class="list"></div>
+        <div id="contractsEmpty" class="empty-state" style="display:none;">
+          <div class="empty-state-icon">📋</div>
+          <p>Aucun contrat trouvé</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Jour -->
+    <div id="tab-jour" class="tab-content">
+      <div class="card">
+        <h2>📅 Résumé du jour</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="dayDate">Date</label>
+            <input type="date" id="dayDate">
+          </div>
+        </div>
+        <div id="dayKpis" class="kpi-grid"></div>
+        <div id="dayComparison" style="margin-top:12px;"></div>
+        <div id="dayNote" style="margin-top:16px; font-size:13px; color:var(--muted);"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Graphique du jour</h2>
+        <div style="height:260px;">
+          <canvas id="dayChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📝 Contrats du jour</h2>
+        <div id="dayContractsList" class="list"></div>
+        <div id="dayContractsEmpty" class="empty-state" style="display:none;">
+          <div class="empty-state-icon">📝</div>
+          <p>Aucun contrat pour ce jour</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Semaine -->
+    <div id="tab-semaine" class="tab-content">
+      <div class="card">
+        <h2>📊 Résumé de la semaine</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="weekDate">Sélectionner une date</label>
+            <input type="date" id="weekDate">
+          </div>
+          <div class="form-group">
+            <label>Période</label>
+            <div class="pill" style="width:100%; justify-content:space-between;">
+              <span id="weekRange">--</span>
+              <strong id="weekNumber">--</strong>
+            </div>
+          </div>
+        </div>
+        <div id="weekKpis" class="kpi-grid"></div>
+        <div id="weekComparison" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Graphique de la semaine</h2>
+        <div style="height:260px;">
+          <canvas id="weekChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Répartition par type</h2>
+        <div id="weekStats"></div>
+      </div>
+
+      <div class="card">
+        <h2>🎯 Objectif hebdomadaire</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="weeklyGoal">Objectif (nombre de contrats / semaine)</label>
+            <input type="number" id="weeklyGoal" min="0" placeholder="Ex: 30">
+          </div>
+        </div>
+        <div id="weekGoalProgress"></div>
+        <div id="weekProjection" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>📝 Contrats de la semaine</h2>
+        <div id="weekContractsList" class="list"></div>
+        <div id="weekContractsEmpty" class="empty-state" style="display:none;">
+          <div class="empty-state-icon">📝</div>
+          <p>Aucun contrat pour cette semaine</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Mois -->
+    <div id="tab-mois" class="tab-content">
+      <div class="card">
+        <h2>📈 Résumé du mois</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="monthDate">Sélectionner une date</label>
+            <input type="date" id="monthDate">
+          </div>
+          <div class="form-group">
+            <label>Mois</label>
+            <div class="pill" style="width:100%; justify-content:space-between;">
+              <span id="monthLabel">--</span>
+            </div>
+          </div>
+        </div>
+        <div id="monthKpis" class="kpi-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Graphique du mois</h2>
+        <div style="height:260px;">
+          <canvas id="monthChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Répartition par type</h2>
+        <div id="monthStats"></div>
+      </div>
+
+      <div class="card">
+        <h2>🎯 Objectif mensuel</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="monthlyGoal">Objectif (nombre de contrats)</label>
+            <input type="number" id="monthlyGoal" min="0" placeholder="Ex: 120">
+          </div>
+        </div>
+        <div id="goalProgress"></div>
+        <div id="monthProjection" style="margin-top:12px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>🛡️ Palier assurance (20 €)</h2>
+        <div id="iagTier"></div>
+      </div>
+    </div>
+
+    <!-- Tab Année -->
+    <div id="tab-annee" class="tab-content">
+      <div class="card">
+        <h2>📆 Résumé de l'année</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="yearSelect">Année</label>
+            <select id="yearSelect"></select>
+          </div>
+        </div>
+        <div id="yearKpis" class="kpi-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Évolution mensuelle (contrats & rémunération)</h2>
+        <div style="height:280px;">
+          <canvas id="yearChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Détail mois par mois</h2>
+        <div id="yearMonthly"></div>
+      </div>
+    </div>
+
+    <!-- Tab Stats -->
+    <div id="tab-stats" class="tab-content">
+      <div class="card">
+        <h2>📉 Statistiques globales</h2>
+        <div id="globalKpis" class="kpi-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>🏆 Records</h2>
+        <div id="recordsKpis" class="kpi-grid"></div>
+      </div>
+
+      <div class="card">
+        <h2>📊 Répartition globale par type</h2>
+        <div id="globalStats"></div>
+      </div>
+
+      <div class="card">
+        <h2>💶 Répartition de la rémunération (€)</h2>
+        <div id="amountBreakdown"></div>
+      </div>
+
+      <div class="card">
+        <h2>📈 Évolution quotidienne (graphique)</h2>
+        <div style="height:260px;">
+          <canvas id="dailyContractsChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🧩 Répartition par type (graphique)</h2>
+        <div style="height:260px;">
+          <canvas id="typeDistributionChart" style="max-height:100%;"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Export -->
+    <div id="tab-export" class="tab-content">
+      <div class="card">
+        <h2>📄 Export entre deux dates</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="exportRangeStart">Du</label>
+            <input type="date" id="exportRangeStart">
+          </div>
+          <div class="form-group sm">
+            <label for="exportRangeEnd">Au</label>
+            <input type="date" id="exportRangeEnd">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="btnGenerateRange" class="btn-primary">📄 Générer l'export</button>
+          <button type="button" id="btnGenerateRangeCompact" class="btn-ghost">🧾 Récap compact</button>
+          <button type="button" id="btnCopyRange" class="btn-ghost">📋 Copier</button>
+          <button type="button" id="btnShareRange" class="btn-ghost">📤 Partager</button>
+        </div>
+        <div id="rangeExportPreview" class="export-preview" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>📄 Export texte Mois</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="exportMonthDate">Date mois</label>
+            <input type="date" id="exportMonthDate">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="btnGenerateMonth" class="btn-primary">📄 Générer export mois</button>
+          <button type="button" id="btnCopyMonth" class="btn-ghost">📋 Copier</button>
+          <button type="button" id="btnShareMonth" class="btn-ghost">📤 Partager</button>
+          <button type="button" id="btnGenerateMonthCompact" class="btn-ghost">🧾 Récap compact</button>
+        </div>
+        <div id="monthExportPreview" class="export-preview" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>💾 Sauvegarde & Restauration</h2>
+        <div class="btn-row">
+          <button type="button" id="btnExportJSON" class="btn-primary">💾 Exporter JSON</button>
+          <button type="button" id="btnExportCSV" class="btn-primary">📊 Exporter CSV</button>
+          <button type="button" id="btnImportMerge" class="btn-ghost">📥 Importer (fusionner)</button>
+          <button type="button" id="btnImportReplace" class="btn-ghost">♻️ Importer (remplacer)</button>
+          <input type="file" id="importFile" accept=".json" style="display:none;">
+        </div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button type="button" id="btnRestoreAuto" class="btn-ghost">↩️ Restaurer sauvegarde auto</button>
+          <button type="button" id="btnClearAll" class="btn-danger">🗑️ Tout effacer</button>
+        </div>
+        <div id="restoreStatus" style="margin-top:12px; font-size:13px; color:var(--muted);"></div>
+        <div id="backupStatus" class="alert alert-info show" style="margin-top:16px;"></div>
+        <p style="margin-top:16px; font-size:13px; color:var(--muted);">
+          💡 Conseil : Exportez régulièrement vos données en JSON pour éviter toute perte.
+          Les contrats sont stockés dans ce navigateur uniquement — videz le cache et ils disparaissent si vous n'avez pas de sauvegarde.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="chart.umd.min.js"></script>
+  <script src="logic.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
