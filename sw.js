@@ -11,7 +11,7 @@
  *
  * Incrémentez CACHE_VERSION à chaque mise à jour des fichiers mis en cache.
  */
-const CACHE_VERSION = 'v6';
+const CACHE_VERSION = 'v7';
 const CACHE_NAME = `remuneration-${CACHE_VERSION}`;
 
 // Chemins relatifs au scope du service worker (fonctionne quel que soit

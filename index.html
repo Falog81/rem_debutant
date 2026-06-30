@@ -412,6 +412,26 @@
     <!-- Tab Export -->
     <div id="tab-export" class="tab-content">
       <div class="card">
+        <h2>📋 Export journalier compact</h2>
+        <div class="form-row">
+          <div class="form-group sm">
+            <label for="exportDayDate">Jour</label>
+            <input type="date" id="exportDayDate">
+          </div>
+          <div class="form-group">
+            <label for="exportDayLieu">Lieu</label>
+            <input type="text" id="exportDayLieu" placeholder="Ex : PARIS" autocomplete="off">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button type="button" id="btnGenerateDay" class="btn-primary">📋 Générer</button>
+          <button type="button" id="btnCopyDay" class="btn-ghost">📋 Copier</button>
+          <button type="button" id="btnShareDay" class="btn-ghost">📤 Partager</button>
+        </div>
+        <div id="dayExportPreview" class="export-preview" style="margin-top:16px;"></div>
+      </div>
+
+      <div class="card">
         <h2>📄 Export entre deux dates</h2>
         <div class="form-row">
           <div class="form-group sm">

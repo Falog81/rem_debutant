@@ -10,7 +10,8 @@
         goal: 'remuneration_monthly_goal',
         weeklyGoal: 'remuneration_weekly_goal',
         lastBackup: 'remuneration_last_backup',
-        autoSnapshot: 'remuneration_auto_snapshot'
+        autoSnapshot: 'remuneration_auto_snapshot',
+        dailyLieu: 'remuneration_daily_lieu'
       };
 
       // Import logique métier pure
@@ -191,6 +192,12 @@
       const typeDistributionChartEl = $('#typeDistributionChart');
 
       // Export
+      const exportDayDate = $('#exportDayDate');
+      const exportDayLieu = $('#exportDayLieu');
+      const btnGenerateDay = $('#btnGenerateDay');
+      const btnCopyDay = $('#btnCopyDay');
+      const btnShareDay = $('#btnShareDay');
+      const dayExportPreview = $('#dayExportPreview');
       const exportRangeStart = $('#exportRangeStart');
       const exportRangeEnd = $('#exportRangeEnd');
       const exportMonthDate = $('#exportMonthDate');
@@ -549,6 +556,62 @@
       // Objectif mensuel courant (nombre de contrats), saisi dans l'onglet Mois.
       function currentMonthlyGoal() {
         return parseInt(monthlyGoal.value, 10) || 0;
+      }
+
+      // Libellé de type très court pour l'export journalier (ex : "Elec 6kva", "Dual 6+6").
+      function compactTypeLabel(c) {
+        const t = String(c.type || '');
+        if (t === 'DUAL') return contractTypeLabel(c); // "Dual 6+6"
+        const map = {
+          ELEC_3: 'Elec 3kva', ELEC_6: 'Elec 6kva', ELEC_9: 'Elec 9kva', ELEC_12: 'Elec 12kva',
+          PRIMEO_ELEC_6: 'Elec 6kva', PRIMEO_ELEC_9: 'Elec 9kva', PRIMEO_ELEC_12: 'Elec 12kva',
+          GAZ_1_6: 'Gaz 1-6kwh', GAZ_6_13: 'Gaz 6-13kwh', GAZ_13_PLUS: 'Gaz 13+kwh',
+        };
+        return map[t] || t.replace(/_/g, ' ');
+      }
+
+      // Export journalier très compact : date, lieu, puis listes par catégorie
+      // (Plénitude + PCP, Primeo, Assurance) avec uniquement le type et la référence.
+      // Les parties annulées ne sont pas listées.
+      function buildDailyCompactExport(dateStr, lieu) {
+        const dayContracts = getDayContracts(contracts, dateStr);
+        const lines = [];
+        lines.push(formatDate(dateStr));
+        lines.push((lieu || '').trim().toUpperCase());
+
+        const plen = [];   // Plénitude (et gaz) : "Type [ref] +PCP"
+        const primeo = []; // Primeo : type puis "[ref]" sur la ligne suivante
+        const assu = [];   // Assurance : références seules
+
+        dayContracts.forEach((c) => {
+          // Partie énergie active
+          if (c.type && !c.energyCancelled) {
+            const label = compactTypeLabel(c);
+            if (c.provider === 'PRIMEO') {
+              primeo.push(label);
+              if (c.reference) primeo.push(`[${c.reference}]`);
+            } else {
+              const ref = c.reference ? ` [${c.reference}]` : '';
+              const pcp = c.axa ? ' +PCP' : '';
+              plen.push(`${label}${ref}${pcp}`);
+            }
+          }
+          // Partie assurance active
+          if (c.iagType && !c.iagCancelled && c.iagReference) {
+            assu.push(c.iagReference);
+          }
+        });
+
+        if (plen.length) { lines.push(''); lines.push('PLENITUDE'); plen.forEach((l) => lines.push(l)); }
+        if (primeo.length) { lines.push(''); lines.push('PRIMEO'); primeo.forEach((l) => lines.push(l)); }
+        if (assu.length) { lines.push(''); lines.push('ASSU'); assu.forEach((l) => lines.push(l)); }
+
+        if (!plen.length && !primeo.length && !assu.length) {
+          lines.push('');
+          lines.push('Aucun contrat ce jour.');
+        }
+
+        return lines.join('\n');
       }
 
       // Export pour une plage de dates libre (du / au). Tolère l'inversion.
@@ -1813,6 +1876,23 @@
       });
 
       // ========== Export handlers ==========
+      btnGenerateDay.addEventListener('click', () => {
+        const d = exportDayDate.value || todayStr();
+        const lieu = (exportDayLieu.value || '').trim();
+        if (!lieu) { showToast('Renseigne le lieu avant de générer', 'warning'); exportDayLieu.focus(); return; }
+        localStorage.setItem(STORAGE_KEYS.dailyLieu, lieu);
+        dayExportPreview.textContent = buildDailyCompactExport(d, lieu);
+        showToast('Export journalier généré', 'success');
+      });
+
+      btnCopyDay.addEventListener('click', () => {
+        const text = dayExportPreview.textContent || '';
+        if (!text.trim()) { showToast("Génère d'abord l'export journalier", 'warning'); return; }
+        copyToClipboard(text);
+      });
+
+      btnShareDay.addEventListener('click', () => shareText(dayExportPreview.textContent || ''));
+
       btnGenerateRange.addEventListener('click', () => {
         const s = exportRangeStart.value, e = exportRangeEnd.value;
         if (!s || !e) { showToast('Choisis une date de début et de fin', 'warning'); return; }
@@ -2123,6 +2203,8 @@
         dayDate.value = today;
         weekDate.value = today;
         monthDate.value = today;
+        exportDayDate.value = today;
+        exportDayLieu.value = localStorage.getItem(STORAGE_KEYS.dailyLieu) || '';
         exportRangeStart.value = today.slice(0, 8) + '01'; // 1er du mois courant
         exportRangeEnd.value = today;
         exportMonthDate.value = today;
